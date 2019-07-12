@@ -1,9 +1,24 @@
+# frozen_string_literal: true
+
 module CacheCrispies
+  # A Rails concern designed to be used in Rails controllers to provide access to
+  # the #cache_render method
   module Controller
     extend ActiveSupport::Concern
 
+    # The serialization mode that should be used with the oj gem
     OJ_MODE = :rails
 
+    # Renders the provided cacheable object to JSON using the provided
+    # serializer
+    #
+    # @param serializer [CacheCrispies::Base] a class inheriting from
+    #   CacheCrispies::Base
+    # @param cacheable [Object] can be any object. But is typically a Rails
+    #   model inheriting from ActiveRecord::Base
+    # @param options [Hash] any hash of custom options that should be passed
+    #   to the serializer instance
+    # @return [void]
     def cache_render(serializer, cacheable, options = {})
       plan = CacheCrispies::Plan.new(serializer, cacheable, options)
 

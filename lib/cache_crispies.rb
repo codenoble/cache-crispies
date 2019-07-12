@@ -1,12 +1,20 @@
+# frozen_string_literal: true
+
 require 'active_support/dependencies'
 require 'oj'
 
+# The top level namespace module for the gem
 module CacheCrispies
-  CACHE_KEY_PREFIX = 'cache-crispies'.freeze
-  CACHE_KEY_SEPARATOR = '+'.freeze
+  # A prefix used in building cache key. This should be extra insurance against
+  # key conflicts and also provides an easy way to search for keys in Redis.
+  CACHE_KEY_PREFIX = 'cache-crispies'
+
+  # The string to use to join parts of the cache keys together
+  CACHE_KEY_SEPARATOR = '+'
 
   require 'cache_crispies/version'
 
+  # Use autoload for better Rails development
   autoload :Attribute,    'cache_crispies/attribute'
   autoload :Base,         'cache_crispies/base'
   autoload :Collection,   'cache_crispies/collection'

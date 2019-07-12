@@ -140,11 +140,10 @@ MIT
 
 To Do List
 ----------
-- Add Yard Doc comments
-- Track coverage
-- Configuration to enable/disable etags
+- Caching documentation
+- Incorporate nested serializer's keys into the top serializers cache key
+- Provide a way to handle the fact that a serializer may include a mixin or something that might have changed and should bust the cache.
 - Blocks for custom attributes (if performance hit is minimal)
 - through: option for delegation (if performance hit is minimal)
-- Make caching Rails independent (dont use `Rails.cache`)
 - Partial caching
 - Rake task to clear out cache keys

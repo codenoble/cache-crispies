@@ -1,8 +1,29 @@
-module CacheCrispies
-  class Attribute
-    class InvalidCoersionType < ArgumentError; end
+# frozen_string_literal: true
 
-    def initialize(key, from: nil, with: nil, to: nil, nesting: [], conditions: [])
+module CacheCrispies
+  # Reperesents a single serialized attribute in a serializer. It's generated
+  # by a call to either {CacheCrispies::Base.serialize} or
+  # {CacheCrispies::Base.merge}.
+  class Attribute
+    # Represents an invalid option passed in the to: argument
+    class InvalidCoercionType < ArgumentError; end
+
+    # Initializes a new CacheCrispies::Attribute instance
+    #
+    # @param key [Symbol] the JSON key for this attribute
+    # @param from [Symbol] the method on the model to call to get the value
+    # @param with [CacheCrispies::Base] a serializer to use to serialize the
+    # @param to [Class, Symbol] the data type to coerce the value into
+    # @param nesting [Array<Symbol>] the JSON keys this attribute will be
+    #    nested inside
+    # @param conditions [Array<CacheCrispies::Condition>] the show_if condition
+    #   blocks this attribute is nested inside. These will be evaluated for
+    #   thruthiness and must all be true for this attribute to reneder.
+    #   argument's value
+    def initialize(
+      key,
+      from: nil, with: nil, to: nil, nesting: [], conditions: []
+    )
       @key = key
       @method_name = from || key || :itself
       @serializer = with
@@ -11,8 +32,22 @@ module CacheCrispies
       @conditions = Array(conditions)
     end
 
-    attr_reader :method_name, :key, :serializer, :coerce_to, :nesting, :conditions
+    attr_reader(
+      :method_name,
+      :key,
+      :serializer,
+      :coerce_to,
+      :nesting,
+      :conditions
+    )
 
+    # Gets the value of the attribute for the given model and options
+    #
+    # @param model [Object] typically ActiveRecord::Base, but could be anything
+    # @param options [Hash] any optional values from the serializer instance
+    # @return the value for the attribute for the given model and options
+    # @raise [InvalidCoercionType] when an invalid argument is passed in the
+    #   to: argument
     def value_for(model, options)
       value = model.public_send(method_name)
 
@@ -51,7 +86,7 @@ module CacheCrispies
         !!value
       else
         raise(
-          InvalidCoersionType,
+          InvalidCoercionType,
           "#{coerce_to} has no registered coercion strategy"
         )
       end

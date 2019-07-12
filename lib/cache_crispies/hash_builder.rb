@@ -1,10 +1,20 @@
+# frozen_string_literal: true
+
 module CacheCrispies
+  # Builds out a JSON-ready Hash using the attributes in a Serializer
   class HashBuilder
+    # Initializes a new instance of CacheCrispies::HashBuilder
+    #
+    # @param serializer [CacheCrispies::Base] an instance of a subclass of
+    #   CacheCrispies::Base
     def initialize(serializer)
       @serializer = serializer
       @condition_results = Memoizer.new
     end
 
+    # Builds the Hash
+    #
+    # @return [Hash]
     def call
       hash = {}
 

@@ -151,7 +151,7 @@ describe CacheCrispies::Attribute do
         let(:to) { OpenStruct }
 
         it 'raises an exception' do
-          expect { subject }.to raise_exception CacheCrispies::Attribute::InvalidCoersionType
+          expect { subject }.to raise_exception CacheCrispies::Attribute::InvalidCoercionType
         end
       end
     end

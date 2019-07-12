@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
 module CacheCrispies
-  VERSION = '0.1.0'.freeze
+  # The version of the gem
+  VERSION = '0.1.0'
 end
