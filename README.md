@@ -1,4 +1,4 @@
-Cache Crispies [![Build Status](https://travis-ci.org/codenoble/cache-crispies.svg?branch=master)](https://travis-ci.org/codenoble/cache-crispies)
+Cache Crispies [![Build Status](https://travis-ci.org/codenoble/cache-crispies.svg?branch=master)](https://travis-ci.org/codenoble/cache-crispies) [![Maintainability](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/maintainability)](https://codeclimate.com/github/codenoble/cache-crispies/maintainability)
 ==============
 
 Speedy Rails JSON serialization with built-in caching.
@@ -141,7 +141,6 @@ MIT
 To Do List
 ----------
 - Add Yard Doc comments
-- Configure with Code Climate
 - Track coverage
 - Configuration to enable/disable etags
 - Blocks for custom attributes (if performance hit is minimal)
