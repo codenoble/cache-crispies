@@ -1,3 +1,6 @@
+require 'simplecov'
+SimpleCov.start
+
 require 'byebug'
 require_relative '../lib/cache_crispies'
 
