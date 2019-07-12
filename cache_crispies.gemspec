@@ -7,8 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = 'cache_crispies'
   spec.version       = CacheCrispies::VERSION
   spec.authors       = ['Adam Crownoble']
-  spec.email         = ['adam@codenoble.com']
+  spec.email         = 'adam@codenoble.com'
   spec.summary       = 'Fast Rails serializer with built-in caching'
+  spec.homepage      = 'https://github.com/codenoble/cache-crispies'
+  spec.licenses      = ['MIT']
 
   spec.files         = Dir.glob('{lib,spec}/**/*') + ['.rspec']
   spec.test_files    = spec.files.grep(%r{^(spec)/})
@@ -18,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'oj', '~> 3.7'
   spec.add_dependency 'rails', '~> 5.0'
 
-  spec.add_development_dependency 'bundler', '>= 1.7'
-  spec.add_development_dependency 'byebug', '>= 10.0'
+  spec.add_development_dependency 'bundler', '~> 2.0'
+  spec.add_development_dependency 'byebug', '~> 11.0'
   spec.add_development_dependency 'rspec', '~> 3.8.0'
 end
