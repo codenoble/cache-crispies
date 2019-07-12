@@ -49,7 +49,10 @@ describe CacheCrispies::Plan do
   end
 
   describe '#etag' do
-
+    it 'generates an MD5 digest of the cache_key' do
+      expect(subject).to receive(:cache_key).and_return 'foo'
+      expect(subject.etag).to eq Digest::MD5::hexdigest('foo')
+    end
   end
 
   describe '#cache_key' do
@@ -104,6 +107,21 @@ describe CacheCrispies::Plan do
   end
 
   describe '#cache' do
+    context 'when the plan is not cacheable' do
+      it "doesn't cache the results" do
+        expect(Rails).to_not receive(:cache)
+        subject.cache {}
+      end
+    end
+
+    context 'when the plan is not cacheable' do
+      it "doesn't cache the results" do
+        expect(subject).to receive(:cache?).and_return true
+        expect(subject).to receive(:cache_key).and_return 'bar'
+        expect(Rails).to receive_message_chain(:cache, :fetch).with('bar')
+        subject.cache {}
+      end
+    end
   end
 
   describe '#wrap' do

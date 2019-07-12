@@ -20,9 +20,7 @@ describe CacheCrispies::Collection do
   let(:uncacheable_models) { [model1, model2] }
   let(:cacheable_models) {
     [model1, model2].tap do |models|
-      def models.cache_key
-        'cereals-key'
-      end
+      def models.cache_key() end
     end
   }
   let(:collection) { cacheable_models }
