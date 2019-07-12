@@ -1,4 +1,4 @@
-Cache Crispies
+Cache Crispies [![Build Status](https://travis-ci.org/codenoble/cache-crispies.svg?branch=master)](https://travis-ci.org/codenoble/cache-crispies)
 ==============
 
 Speedy Rails JSON serialization with built-in caching.
@@ -141,8 +141,8 @@ MIT
 To Do List
 ----------
 - Add Yard Doc comments
-- Configure with Travis CI
 - Configure with Code Climate
+- Track coverage
 - Configuration to enable/disable etags
 - Blocks for custom attributes (if performance hit is minimal)
 - through: option for delegation (if performance hit is minimal)

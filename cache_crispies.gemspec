@@ -10,9 +10,8 @@ Gem::Specification.new do |spec|
   spec.email         = ['adam@codenoble.com']
   spec.summary       = 'Fast Rails serializer with built-in caching'
 
-  spec.files         = Dir.glob('{lib,spec}/**/*') + %w[Rakefile .rspec]
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.files         = Dir.glob('{lib,spec}/**/*') + ['.rspec']
+  spec.test_files    = spec.files.grep(%r{^(spec)/})
   spec.require_paths = ['lib']
 
   # TODO: see if we can just require some action_* gems instead
