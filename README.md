@@ -3,6 +3,19 @@ Cache Crispies [![Build Status](https://travis-ci.org/codenoble/cache-crispies.s
 
 Speedy Rails JSON serialization with built-in caching.
 
+Why?
+----
+
+There are a lot of Rails serializers out there, but there seem to be very few these days that are well maintained and performant. The ones that are, tend to lock you into a specific standard for how to format your JSON responses. And the idea of introducing breaking API changes across the board to a mature Rails app is daunting, to say the least.
+
+In additon, incorporating a caching layer (for performance reasons) into your serializers can be difficult unless you do it at a Rails view layer. And the serialization gems that work at the view layer tend to be slow in comparison to others. So it tends to be a one step forward one step back sort of solution.
+
+In light of all that, this gem was built with these goals in mind:
+1. Be fast
+2. Support caching in as simple a way as we can
+3. Support rollout without causing breaking API changes
+4. Avoid the bloat that can lead to slowness and maintenance difficulties
+
 Requirements
 ------------
 - Ruby `2.6` _(others will likely work but are untested)_
