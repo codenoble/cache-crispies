@@ -5,6 +5,17 @@ module CacheCrispies
   class Base
     attr_reader :model, :options
 
+    def self.inherited(other)
+      other.instance_variable_set(:@attributes, [])
+      other.instance_variable_set(:@nesting, [])
+      other.instance_variable_set(:@conditions, [])
+    end
+
+    class << self
+      attr_reader :attributes
+    end
+    delegate :attributes, to: :class
+
     def initialize(model, options = {})
       @model = model
       @options = options
@@ -40,11 +51,6 @@ module CacheCrispies
       @cache_key_base ||= "#{self}-#{file_hash}"
     end
 
-    def self.attributes
-      @attributes || []
-    end
-    delegate :attributes, to: :class
-
     private
 
     def self.file_hash
@@ -63,7 +69,6 @@ module CacheCrispies
     private_class_method :path
 
     def self.nest_in(key, &block)
-      @nesting ||= []
       @nesting << key
 
       block.call
@@ -73,7 +78,6 @@ module CacheCrispies
     private_class_method :nest_in
 
     def self.show_if(condition_proc, &block)
-      @conditions ||= []
       @conditions << Condition.new(condition_proc)
 
       block.call
@@ -83,8 +87,6 @@ module CacheCrispies
     private_class_method :show_if
 
     def self.serialize(*attribute_names, from: nil, with: nil, to: nil)
-      @attributes ||= []
-
       attribute_names.flatten.map { |att| att&.to_sym }.map do |attrib|
         current_nesting = Array(@nesting).dup
         current_conditions = Array(@conditions).dup

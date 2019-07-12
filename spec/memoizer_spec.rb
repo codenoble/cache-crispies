@@ -3,8 +3,6 @@ require 'spec_helper'
 describe CacheCrispies::Memoizer do
   describe '#fetch' do
     it 'only calls the block once per key' do
-      block = -> {}
-
       expect { |block| subject.fetch 1, &block }.to yield_with_no_args
       expect { |block| subject.fetch 1, &block }.to_not yield_with_no_args
       expect { |block| subject.fetch 2, &block }.to yield_with_no_args
