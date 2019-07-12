@@ -142,6 +142,11 @@ CerealSerializer.new(Cereal.first, trendy: true).as_json
 
 _**NOTE:** Documentation for caching is coming soon._
 
+Detailed Documentation
+----------------------
+
+See [rubydoc.info/gems/cache_crispies](https://www.rubydoc.info/gems/cache_crispies/)
+
 Tips
 ----
 To delete all cache entries in Redis:
