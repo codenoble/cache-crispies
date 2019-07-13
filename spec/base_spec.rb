@@ -90,7 +90,30 @@ describe CacheCrispies::Base do
   end
 
   describe '.cache_key_base' do
-    # TODO
+    let(:serializer_file_path) {
+      File.expand_path('fixtures/test_serializer.rb', __dir__)
+    }
+    let(:serializer_file_digest) {
+      Digest::MD5.file(serializer_file_path).to_s
+    }
+
+    before do
+      allow(Rails).to receive_message_chain(:root, :join).and_return(
+        serializer_file_path
+      )
+    end
+
+    it 'includes the file name' do
+      expect(subject.class.cache_key_base).to include subject.class.to_s
+    end
+
+    it "includes a digest of the serialize class file's contents" do
+      expect(subject.class.cache_key_base).to include serializer_file_digest
+    end
+
+    it "correctly formats the key" do
+      expect(subject.class.cache_key_base).to eq "#{subject.class}-#{serializer_file_digest}"
+    end
   end
 
   describe '.attributes' do
