@@ -38,6 +38,37 @@ class CerealSerializer < CacheCrispies::Base
   serialize :name, :brand
 end
 ```
+
+### A not-so-simple serializer
+```ruby
+  class CerealSerializer < CacheCrispies::Base
+    serialize :uid, from: :id, to: String
+    serialize :name, :company
+    merge :itself, with: MarketingBsSerializer
+
+    nest_in :about do
+      nest_in :nutritional_information do
+        serialize :calories
+        serialize :ingredients, with: IngredientSerializer
+      end
+    end
+
+    show_if ->(_model, options) { options[:be_trendy] } do
+      nest_in :health do
+        serialize :organic
+
+        show_if ->(model) { model.organic } do
+          serialize :certification
+        end
+      end
+    end
+
+    def certification
+      'Totally Not A Scam Certifiers Inc'
+    end
+  end
+```
+
 Put serializer files in `app/serializers/`. For instance this file should be at `app/serializers/cache_serializer.rb`.
 
 ### In your Rails controller
@@ -48,6 +79,38 @@ class CerealsController
     cache_render CerealSerializer, cereals, custom_option: true
   end
 end
+```
+
+### Anywhere else
+```ruby
+CerealSerializer.new(Cereal.first, be_trendy: true).as_json
+```
+
+### Output
+```json
+{
+  "uid": "42",
+  "name": "Eyeholes",
+  "company": "Needful Things",
+  "tagline": "Part of a balanced breakfast",
+  "small_print": "This doesn't mean jack-squat",
+  "about": {
+    "nutritional_information": {
+      "calories": 1000,
+      "ingredients": [
+        {
+          "name": "Sugar"
+        },
+        {
+          "name": "Other Kind of Sugar"
+        }
+      ]
+    }
+  },
+  "health": {
+    "organic": false
+  }
+}
 ```
 
 How To...

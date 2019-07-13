@@ -32,7 +32,7 @@ describe CacheCrispies::HashBuilder do
       end
     end
 
-    show_if ->(model, options) { options[:be_trendy] } do
+    show_if ->(_model, options) { options[:be_trendy] } do
       nest_in :health do
         serialize :organic
 
