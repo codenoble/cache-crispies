@@ -144,8 +144,11 @@ _**NOTE:** Documentation for caching is coming soon._
 
 Detailed Documentation
 ----------------------
-
 See [rubydoc.info/gems/cache_crispies](https://www.rubydoc.info/gems/cache_crispies/)
+
+Benchmarks and Example Application
+----------------------------------
+See [github.com/codenoble/cache-crispies-performance-comparison](https://github.com/codenoble/cache-crispies-performance-comparison)
 
 Tips
 ----
