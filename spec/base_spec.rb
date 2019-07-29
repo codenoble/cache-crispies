@@ -90,6 +90,7 @@ describe CacheCrispies::Base do
   end
 
   describe '.cache_key_base' do
+    let(:nested_serializer_digest) { 'nutrition-serializer-digest' }
     let(:serializer_file_path) {
       File.expand_path('fixtures/test_serializer.rb', __dir__)
     }
@@ -98,6 +99,9 @@ describe CacheCrispies::Base do
     }
 
     before do
+      allow(NutritionSerializer).to receive(:file_hash).and_return(
+        nested_serializer_digest
+      )
       allow(Rails).to receive_message_chain(:root, :join).and_return(
         serializer_file_path
       )
@@ -107,12 +111,18 @@ describe CacheCrispies::Base do
       expect(subject.class.cache_key_base).to include subject.class.to_s
     end
 
-    it "includes a digest of the serialize class file's contents" do
+    it "includes a digest of the serializer class file's contents" do
       expect(subject.class.cache_key_base).to include serializer_file_digest
     end
 
-    it "correctly formats the key" do
-      expect(subject.class.cache_key_base).to eq "#{subject.class}-#{serializer_file_digest}"
+    it "includes a digest of the nested serializer class file's contents" do
+      expect(subject.class.cache_key_base).to include nested_serializer_digest
+    end
+
+    it 'correctly formats the key' do
+      expect(subject.class.cache_key_base).to eq(
+        "#{subject.class}-#{serializer_file_digest}+#{nested_serializer_digest}"
+      )
     end
   end
 

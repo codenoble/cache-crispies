@@ -100,8 +100,19 @@ module CacheCrispies
     #
     # @return [String] a cache key for the class
     def self.cache_key_base
-      # TODO: we may need to get a cache key from nested serializers as well :(
-      @cache_key_base ||= "#{self}-#{file_hash}"
+      @cache_key_base ||= "#{self}-#{file_hashes.join(CACHE_KEY_SEPARATOR)}"
+    end
+
+    # Return an array of cache key string for this serializer and all nested
+    # and deeply nested serializers. The purpose of grabbing all this data is
+    # to be able to construct a cache key that will be busted if any of the
+    # nested serializers, no matter how deep, change at all.
+    #
+    # @return [Array<String>] an array of uniq, sorted serializer file hashes
+    def self.file_hashes
+      @file_hashes ||= (
+        [file_hash] + nested_serializers.flat_map(&:file_hashes)
+      ).uniq.sort
     end
 
     private
@@ -138,6 +149,11 @@ module CacheCrispies
       @conditions.pop
     end
     private_class_method :show_if
+
+    def self.nested_serializers
+      attributes.map(&:serializer).compact
+    end
+    private_class_method :nested_serializers
 
     def self.serialize(*attribute_names, from: nil, with: nil, to: nil)
       attribute_names.flatten.map { |att| att&.to_sym }.map do |attrib|

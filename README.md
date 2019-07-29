@@ -224,9 +224,9 @@ MIT
 
 To Do List
 ----------
-- Caching documentation
-- Incorporate nested serializer's keys into the top serializers cache key
 - Provide a way to handle the fact that a serializer may include a mixin or something that might have changed and should bust the cache.
+- Friendly error for circular serializer dependencies
+- Caching documentation
 - Blocks for custom attributes (if performance hit is minimal)
 - through: option for delegation (if performance hit is minimal)
 - Partial caching
