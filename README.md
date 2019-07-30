@@ -74,6 +74,8 @@ Put serializer files in `app/serializers/`. For instance this file should be at 
 ### In your Rails controller
 ```ruby
 class CerealsController
+  include CacheCrispies::Controller
+
   def index
     cereals = Cereal.all
     cache_render CerealSerializer, cereals, custom_option: true
