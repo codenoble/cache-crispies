@@ -11,19 +11,28 @@ module CacheCrispies
     #   CacheCrispies::Base
     # @param cacheable [Object] typically ActiveRecord::Base or an enumerable
     #   containing instances of ActiveRecord::Base, but could be anything
-    # @param options [Hash] any optional values from the serializer instance
+    # @param [Hash] options any optional values from the serializer instance
+    # @option options [Symbol] :key the name of the root key to nest the JSON
+    #   data under
+    # @option options [Boolean] :collection whether to render the data as a
+    #   collection/array or a single object
     def initialize(serializer, cacheable, options = {})
       @serializer = serializer
       @cacheable = cacheable
-      @key = options.delete(:key)
-      @options = options
+
+      opts = options.dup
+      @key = opts.delete(:key)
+      @collection = opts.delete(:collection)
+      @options = opts
     end
 
     # Whether or not the cacheable should be treated like a collection
     #
     # @return [Boolean] true if cacheable is a collection
     def collection?
-      cacheable.respond_to?(:each)
+      return @collection unless @collection.nil?
+
+      @collection = cacheable.respond_to?(:each)
     end
 
     # Returns the cache_key in a format suitable for an ETag header

@@ -199,6 +199,25 @@ end
 ```
 _Note that `collection_key` is the plural of `key` by default._
 
+### Force rendering as a collection or not
+By default Cache Crispies will look at whether or not the object you're serializing responds to `#each` in order to determine whether to render it as a collection, where every item in the `Enumerable` object is individually passed to the serializer and returned as an `Array`. Or as a non-collection where the single object is serialized and returned.
+
+But you can override this default behavior by passing `collection: true` or `collection: false` to the `cache_render` method.
+
+This can be useful for things like wrappers around collections that contain metadata about the collection.
+
+```ruby
+class CerealListSerializer < CacheCrispies::Base
+  nest_in :meta do
+    serialize :length
+  end
+
+  serialize :cereals, from: :itself, with: CerealSerializer
+end
+
+cache_render CerealSerializer, cereals, collection: false
+```
+
 ### Render a serializer to a `Hash`
 ```ruby
 CerealSerializer.new(Cereal.first, trendy: true).as_json

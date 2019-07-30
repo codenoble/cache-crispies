@@ -16,8 +16,11 @@ module CacheCrispies
     #   CacheCrispies::Base
     # @param cacheable [Object] can be any object. But is typically a Rails
     #   model inheriting from ActiveRecord::Base
-    # @param options [Hash] any hash of custom options that should be passed
-    #   to the serializer instance
+    # @param [Hash] options any optional values from the serializer instance
+    # @option options [Symbol] :key the name of the root key to nest the JSON
+    #   data under
+    # @option options [Boolean] :collection whether to render the data as a
+    #   collection/array or a single object
     # @return [void]
     def cache_render(serializer, cacheable, options = {})
       plan = CacheCrispies::Plan.new(serializer, cacheable, options)

@@ -37,6 +37,14 @@ describe CacheCrispies::Plan do
       it 'returns false' do
         expect(subject.collection?).to be false
       end
+
+      context 'when the :collection option is true' do
+        let(:options) { { collection: true } }
+
+        it 'returns true' do
+          expect(subject.collection?).to be true
+        end
+      end
     end
 
     context 'when a collection' do
@@ -44,6 +52,14 @@ describe CacheCrispies::Plan do
 
       it 'returns false' do
         expect(subject.collection?).to be true
+      end
+
+      context 'when the :collection option is false' do
+        let(:options) { { collection: false } }
+
+        it 'returns false' do
+          expect(subject.collection?).to be false
+        end
       end
     end
   end
