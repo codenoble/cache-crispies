@@ -19,14 +19,14 @@ module CacheCrispies
       hash = {}
 
       serializer.attributes.each do |attrib|
-        next unless show?(attrib)
-
         deepest_hash = hash
 
         attrib.nesting.each do |key|
           deepest_hash[key] ||= {}
           deepest_hash = deepest_hash[key]
         end
+
+        next unless show?(attrib)
 
         value = value_for(attrib)
 
