@@ -50,5 +50,20 @@ describe CacheCrispies::Controller do
 
       subject.cache_render CerealSerializerForController, collection.first
     end
+
+    context 'with a status: option' do
+      it 'passes the status option to the Rails render call' do
+        expect(subject).to receive(:render).with(
+          json: { cereal: { name: cereal_names.first } }.to_json,
+          status: 418
+        )
+
+        subject.cache_render(
+          CerealSerializerForController,
+          collection.first,
+          status: 418
+        )
+      end
+    end
   end
 end

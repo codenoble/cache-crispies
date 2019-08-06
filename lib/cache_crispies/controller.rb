@@ -21,6 +21,9 @@ module CacheCrispies
     #   data under
     # @option options [Boolean] :collection whether to render the data as a
     #   collection/array or a single object
+    # @option options [Integer, Symbol] :status the HTTP response status code
+    #    or Rails-supported symbol. See
+    #    https://guides.rubyonrails.org/layouts_and_rendering.html#the-status-option
     # @return [void]
     def cache_render(serializer, cacheable, options = {})
       plan = CacheCrispies::Plan.new(serializer, cacheable, options)
@@ -38,7 +41,10 @@ module CacheCrispies
           plan.cache { serializer.new(cacheable, options).as_json }
         end
 
-      render json: Oj.dump(plan.wrap(serializer_json), mode: OJ_MODE)
+      render_hash = { json: Oj.dump(plan.wrap(serializer_json), mode: OJ_MODE) }
+      render_hash[:status] = options[:status] if options.key?(:status)
+
+      render render_hash
     end
   end
 end
