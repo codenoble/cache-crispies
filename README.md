@@ -242,13 +242,3 @@ To delete all cache entries in Redis:
 License
 -------
 MIT
-
-To Do List
-----------
-- Provide a way to handle the fact that a serializer may include a mixin or something that might have changed and should bust the cache.
-- Friendly error for circular serializer dependencies
-- Caching documentation
-- Blocks for custom attributes (if performance hit is minimal)
-- through: option for delegation (if performance hit is minimal)
-- Partial caching
-- Rake task to clear out cache keys
