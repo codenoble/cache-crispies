@@ -1,0 +1,4 @@
+plugins:
+  brakeman:
+    # Disable brakeman because it only works with full Rails apps
+    enabled: false
