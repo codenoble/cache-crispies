@@ -1,0 +1,8 @@
+version: "2"
+plugins:
+  brakeman:
+    # Disable brakeman because it only works with full Rails apps
+    enabled: false
+  rubocop:
+    enabled: true
+    channel: rubocop-0-74
