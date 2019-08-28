@@ -18,8 +18,8 @@ In light of all that, this gem was built with these goals in mind:
 
 Requirements
 ------------
-- Ruby `2.6` _(others will likely work but are untested)_
-- Rails 5 _(others may work but are untested)_
+- Ruby 2.4–2.6 _(others will likely work but are untested)_
+- Rails 5 or 6 _(others may work but are untested)_
 - Redis (for caching)
 
 Features
