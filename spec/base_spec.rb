@@ -71,6 +71,21 @@ describe CacheCrispies::Base do
     end
   end
 
+  describe '.dependency_key' do
+    it 'returns nil by default' do
+      expect(subject.class.dependency_key).to be nil
+    end
+
+    context 'after being set' do
+      let(:key) { SecureRandom.hex }
+      before { subject.class.dependency_key key }
+
+      it 'returns the set value' do
+        expect(subject.class.dependency_key).to be key
+      end
+    end
+  end
+
   describe '.collection_key' do
     it 'pluralizes the #key' do
       expect(subject.class.collection_key).to eq :cache_crispies_tests

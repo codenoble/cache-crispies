@@ -57,6 +57,7 @@ module CacheCrispies
         [
           CACHE_KEY_PREFIX,
           serializer.cache_key_base,
+          serializer.dependency_key,
           addons_key,
           cacheable.cache_key
         ].flatten.compact.join(CACHE_KEY_SEPARATOR)

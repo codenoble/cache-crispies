@@ -60,6 +60,21 @@ module CacheCrispies
       to_s.demodulize.chomp('Serializer').underscore.to_sym
     end
 
+    # Get or set a cache key that can be changed whenever an outside dependency
+    # of any kind changes in any way that could change the output of your
+    # serializer. For instance, if a mixin is changed. Or maybe an object
+    # you're serializing has changed it's #to_json method. This key should be
+    # changed accordingly, to bust the cache so that you're not serving stale
+    # data.
+    #
+    # @return [String] a version string in any form
+    def self.dependency_key(key = nil)
+      @dependency_key ||= nil
+      return @dependency_key unless key
+
+      @dependency_key = key.to_s
+    end
+
     # A JSON key to use as a root key on a collection-type serializable. By
     # deafult it's the plural version of .key, but it can be overridden in a
     # subclass to be anything.
