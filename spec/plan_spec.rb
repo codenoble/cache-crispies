@@ -6,6 +6,8 @@ describe CacheCrispies::Plan do
       :cereal
     end
 
+    dependency_key :'v1-beta'
+
     def self.cache_key_addons(options)
       ['addon1', options[:extra_addon]]
     end
@@ -86,6 +88,10 @@ describe CacheCrispies::Plan do
       expect(subject.cache_key).to include serializer.cache_key_base
     end
 
+    it "includes the serializer's #dependency_key" do
+      expect(subject.cache_key).to include 'v1-beta'
+    end
+
     it "includes the addons_key" do
       expect(subject.cache_key).to include(
         Digest::MD5.hexdigest('addon1|addon2')
@@ -104,6 +110,7 @@ describe CacheCrispies::Plan do
       expect(subject.cache_key).to eq(
         'cache-crispies' \
         "+CerealSerializerForPlan-#{Digest::MD5.file(serializer_file_path)}" \
+        '+v1-beta' \
         "+#{Digest::MD5.hexdigest('addon1|addon2')}" \
         '+model-cache-key'
       )
@@ -116,6 +123,7 @@ describe CacheCrispies::Plan do
         expect(subject.cache_key).to eq(
           'cache-crispies' \
           "+CerealSerializerForPlan-#{Digest::MD5.file(serializer_file_path)}" \
+          '+v1-beta' \
           '+model-cache-key'
         )
       end
