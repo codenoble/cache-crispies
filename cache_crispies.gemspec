@@ -16,11 +16,11 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(spec)/})
   spec.require_paths = ['lib']
 
-  # TODO: see if we can just require some action_* gems instead
+  spec.add_dependency 'railties', '>= 5.0.0', '< 6.1'
   spec.add_dependency 'oj', '~> 3.7'
-  spec.add_dependency 'rails', '>= 5.0.0', '< 6.1'
 
-  spec.add_development_dependency "appraisal"
+  spec.add_development_dependency 'activemodel', '>= 5.0.0', '< 6.1'
+  spec.add_development_dependency 'appraisal'
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'byebug', '~> 11.0'
   spec.add_development_dependency 'rspec', '~> 3.8.0'

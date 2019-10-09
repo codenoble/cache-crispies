@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails'
-
 module CacheCrispies
   # Handles rendering and possibly caching a collection of models using a
   #   Serializer
