@@ -15,12 +15,25 @@ module CacheCrispies
   require 'cache_crispies/version'
 
   # Use autoload for better Rails development
-  autoload :Attribute,    'cache_crispies/attribute'
-  autoload :Base,         'cache_crispies/base'
-  autoload :Collection,   'cache_crispies/collection'
-  autoload :Condition,    'cache_crispies/condition'
-  autoload :HashBuilder,  'cache_crispies/hash_builder'
-  autoload :Memoizer,     'cache_crispies/memoizer'
-  autoload :Controller,   'cache_crispies/controller'
-  autoload :Plan,         'cache_crispies/plan'
+  autoload :Attribute,      'cache_crispies/attribute'
+  autoload :Base,           'cache_crispies/base'
+  autoload :Collection,     'cache_crispies/collection'
+  autoload :Condition,      'cache_crispies/condition'
+  autoload :Configuration,  'cache_crispies/configuration'
+  autoload :HashBuilder,    'cache_crispies/hash_builder'
+  autoload :Memoizer,       'cache_crispies/memoizer'
+  autoload :Controller,     'cache_crispies/controller'
+  autoload :Plan,           'cache_crispies/plan'
+
+  def self.configure
+    yield config
+  end
+
+  def self.config
+    @config ||= Configuration.new
+  end
+
+  def self.cache
+    config.cache_store
+  end
 end

@@ -35,7 +35,7 @@ describe CacheCrispies::Collection do
 
         it "doesn't cache the results" do
           expect(CacheCrispies::Plan).to_not receive(:new)
-          expect(Rails).to_not receive :cache
+          expect(CacheCrispies).to_not receive :cache
           expect(subject.as_json).to eq [ {name: name1}, {name: name2} ]
         end
       end
@@ -45,7 +45,7 @@ describe CacheCrispies::Collection do
 
         it "doesn't cache the results" do
           expect(CacheCrispies::Plan).to_not receive(:new)
-          expect(Rails).to_not receive :cache
+          expect(CacheCrispies).to_not receive :cache
           expect(subject.as_json).to eq [ {name: name1}, {name: name2} ]
         end
       end
@@ -55,13 +55,13 @@ describe CacheCrispies::Collection do
       it 'caches the results' do
         expect(CacheCrispies::Plan).to receive(:new).with(
           serializer, model1, options
-        ).and_return double(cache_key: 'cereal-key-1')
+        ).and_return double('plan-dbl-1', cache_key: 'cereal-key-1')
 
         expect(CacheCrispies::Plan).to receive(:new).with(
           serializer, model2, options
-        ).and_return double(cache_key: 'cereal-key-2')
+        ).and_return double('plan-dbl-2', cache_key: 'cereal-key-2')
 
-        expect(Rails).to receive_message_chain(:cache, :fetch_multi).with(
+        expect(CacheCrispies).to receive_message_chain(:cache, :fetch_multi).with(
           %w[cereal-key-1 cereal-key-2]
         ).and_yield('cereal-key-1').and_return(name: name1)
           .and_yield('cereal-key-2').and_return(name: name2)

@@ -28,12 +28,13 @@ module CacheCrispies
     def cache_render(serializer, cacheable, options = {})
       plan = CacheCrispies::Plan.new(serializer, cacheable, options)
 
-      # TODO: It would probably be good to add configuration to etiher
-      # enable or disable this
-      response.weak_etag = plan.etag
+      if CacheCrispies.config.etags?
+        response.weak_etag = plan.etag
+      end
 
       serializer_json =
         if plan.collection?
+          # TODO: try to cache the whole collection here
           cacheable.map do |one_cacheable|
             plan.cache { serializer.new(one_cacheable, options).as_json }
           end

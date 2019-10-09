@@ -70,7 +70,7 @@ module CacheCrispies
     # @return whatever the provided block returns
     def cache
       if cache?
-        Rails.cache.fetch(cache_key) { yield }
+        CacheCrispies.cache.fetch(cache_key) { yield }
       else
         yield
       end

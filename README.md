@@ -30,6 +30,26 @@ Features
 - **ETags** for easy HTTP caching
 - **Simlpe, Readable DSL**
 
+Configuration
+-------------
+### ETags
+```ruby
+CacheCrispies.configure do |conf|
+  conf.etags = true
+end
+```
+_`etags` is set to `false` by default._
+
+### Custom Cache Store
+```ruby
+CacheCrispies.configure do |conf|
+  conf.cache_store = ActiveSupport::Cache::DalliStore.new('localhost')
+end
+```
+`cache_store` must be set to something that quacks like a [ActiveSupport::Cache::Store](https://api.rubyonrails.org/classes/ActiveSupport/Cache/Store.html).
+
+_`cache_store` is set to `Rails.cache` by default, or `ActiveSupport::Cache::NullStore.new` if `Rails.cache` is `nil`._
+
 Usage
 -----
 ### A simple serializer

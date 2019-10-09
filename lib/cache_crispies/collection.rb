@@ -48,7 +48,7 @@ module CacheCrispies
         hash[plan.cache_key] = model
       end
 
-      Rails.cache.fetch_multi(models_by_cache_key.keys) do |cache_key|
+      CacheCrispies.cache.fetch_multi(models_by_cache_key.keys) do |cache_key|
         model = models_by_cache_key[cache_key]
 
         serializer.new(model, options).as_json

@@ -17,7 +17,7 @@ describe CacheCrispies::Plan do
 
   let(:serializer) { CerealSerializerForPlan }
   let(:serializer_file_path) {
-    File.expand_path('fixtures/test_serializer.rb', __dir__)
+    File.expand_path('../fixtures/test_serializer.rb', __dir__)
   }
   let(:model_cache_key) { 'model-cache-key' }
   let(:model) { OpenStruct.new(name: 'Sugar Smacks', cache_key: model_cache_key) }
@@ -133,7 +133,7 @@ describe CacheCrispies::Plan do
   describe '#cache' do
     context 'when the plan is not cacheable' do
       it "doesn't cache the results" do
-        expect(Rails).to_not receive(:cache)
+        expect(CacheCrispies).to_not receive(:cache)
         subject.cache {}
       end
     end
@@ -142,7 +142,7 @@ describe CacheCrispies::Plan do
       it "doesn't cache the results" do
         expect(subject).to receive(:cache?).and_return true
         expect(subject).to receive(:cache_key).and_return 'bar'
-        expect(Rails).to receive_message_chain(:cache, :fetch).with('bar')
+        expect(CacheCrispies).to receive_message_chain(:cache, :fetch).with('bar')
         subject.cache {}
       end
     end

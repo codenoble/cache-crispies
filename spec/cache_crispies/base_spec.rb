@@ -107,7 +107,7 @@ describe CacheCrispies::Base do
   describe '.cache_key_base' do
     let(:nested_serializer_digest) { 'nutrition-serializer-digest' }
     let(:serializer_file_path) {
-      File.expand_path('fixtures/test_serializer.rb', __dir__)
+      File.expand_path('../fixtures/test_serializer.rb', __dir__)
     }
     let(:serializer_file_digest) {
       Digest::MD5.file(serializer_file_path).to_s
