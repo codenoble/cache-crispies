@@ -13,11 +13,8 @@ describe CacheCrispies::Controller do
   end
 
   class CerealSerializerForController < CacheCrispies::Base
+    key 'cereal'
     serialize :name
-
-    def self.key
-      'cereal'
-    end
   end
 
   let(:cereal_names) { ['Count Chocula', 'Eyeholes'] }
@@ -41,7 +38,9 @@ describe CacheCrispies::Controller do
     context 'with etags disabled' do
       it 'does not set etags' do
         expect(subject).to receive(:render).with json: collection_json
-        expect(subject.response).to_not receive(:weak_etag=)
+        response_double = double
+        allow(subject).to receive(:response).and_return response_double
+        expect(response_double).to_not receive(:weak_etag=)
 
         subject.cache_render CerealSerializerForController, collection
       end

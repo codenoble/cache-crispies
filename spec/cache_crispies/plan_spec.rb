@@ -2,13 +2,10 @@ require 'spec_helper'
 
 describe CacheCrispies::Plan do
   class CerealSerializerForPlan < CacheCrispies::Base
-    def self.key
-      :cereal
-    end
-
+    key :cereal
     dependency_key :'v1-beta'
 
-    def self.cache_key_addons(options)
+    cache_key_addons do |options|
       ['addon1', options[:extra_addon]]
     end
 

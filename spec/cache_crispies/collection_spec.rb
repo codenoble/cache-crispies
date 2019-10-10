@@ -7,10 +7,7 @@ describe CacheCrispies::Collection do
 
   class CacheableCerealSerializerForCollection < CacheCrispies::Base
     serialize :name
-
-    def self.do_caching?
-      true
-    end
+    do_caching true
   end
 
   let(:name1) { 'Cinnamon Toast Crunch' }

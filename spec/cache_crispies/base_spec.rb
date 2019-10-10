@@ -43,7 +43,8 @@ describe CacheCrispies::Base do
       )
   end
 
-  let(:instance) { CacheCrispiesTestSerializer.new(model) }
+  let(:serializer) { CacheCrispiesTestSerializer }
+  let(:instance) { serializer.new(model) }
   subject { instance }
 
   describe '#as_json' do
@@ -66,41 +67,102 @@ describe CacheCrispies::Base do
   end
 
   describe '.key' do
-    it 'underscores the demodulized class name' do
-      expect(subject.class.key).to eq :cache_crispies_test
-    end
-  end
-
-  describe '.dependency_key' do
-    it 'returns nil by default' do
-      expect(subject.class.dependency_key).to be nil
+    it 'underscores the demodulized class name by default' do
+      expect(serializer.key).to eq :cache_crispies_test
     end
 
-    context 'after being set' do
-      let(:key) { SecureRandom.hex }
-      before { subject.class.dependency_key key }
+    context 'with a custom key' do
+      after { serializer.remove_instance_variable :@key }
 
-      it 'returns the set value' do
-        expect(subject.class.dependency_key).to be key
+      it 'sets and returns a custom key' do
+        expect {
+          serializer.key 'custom_key'
+        }.to change { serializer.key }.from(:cache_crispies_test).to :custom_key
+      end
+
+      it 'sets and returns a nil key' do
+        expect {
+          serializer.key nil
+        }.to change { serializer.key }.from(:cache_crispies_test).to nil
       end
     end
   end
 
   describe '.collection_key' do
-    it 'pluralizes the #key' do
-      expect(subject.class.collection_key).to eq :cache_crispies_tests
+    it 'pluralizes the #key by default' do
+      expect(serializer.collection_key).to eq :cache_crispies_tests
+    end
+
+    context 'with a custom key' do
+      after { serializer.remove_instance_variable :@collection_key }
+
+      it 'sets and returns a custom key' do
+        expect {
+          serializer.collection_key 'custom_key'
+        }.to change {
+          serializer.collection_key
+        }.from(:cache_crispies_tests).to :custom_key
+      end
+
+      it 'sets and returns a nil key' do
+        expect {
+          serializer.collection_key nil
+        }.to change {
+          serializer.collection_key
+        }.from(:cache_crispies_tests).to nil
+      end
     end
   end
 
-  describe '.do_caching?' do
+  describe '.do_caching' do
     it 'is false by default' do
-      expect(subject.class.do_caching?).to be false
+      expect(serializer.do_caching).to be false
+    end
+
+    context 'when called with an argument' do
+      after { serializer.remove_instance_variable :@do_caching }
+
+      it 'sets and returns a value' do
+        expect {
+          serializer.do_caching true
+        }.to change {
+          serializer.do_caching
+        }.from(false).to true
+      end
     end
   end
 
   describe '.cache_key_addons' do
     it 'returns an empty array by default' do
-      expect(subject.class.cache_key_addons).to eq []
+      expect(serializer.cache_key_addons).to eq []
+    end
+
+    context 'when given a block' do
+      it 'stores the block for later execution' do
+        serializer.cache_key_addons { |opts| opts[:username].downcase }
+        expect(
+          serializer.cache_key_addons(username: 'CapnCrunch')
+        ).to eq ['capncrunch']
+      end
+
+      it 'returns nil' do
+        expect(serializer.cache_key_addons { |_opts| }).to be nil
+      end
+    end
+  end
+
+  describe '.dependency_key' do
+    it 'returns nil by default' do
+      expect(serializer.dependency_key).to be nil
+    end
+
+    context 'after being set' do
+      let(:key) { SecureRandom.hex }
+      before { serializer.dependency_key key }
+
+      it 'returns the set value' do
+        expect(serializer.dependency_key).to be key
+      end
     end
   end
 
@@ -123,20 +185,20 @@ describe CacheCrispies::Base do
     end
 
     it 'includes the file name' do
-      expect(subject.class.cache_key_base).to include subject.class.to_s
+      expect(serializer.cache_key_base).to include serializer.to_s
     end
 
     it "includes a digest of the serializer class file's contents" do
-      expect(subject.class.cache_key_base).to include serializer_file_digest
+      expect(serializer.cache_key_base).to include serializer_file_digest
     end
 
     it "includes a digest of the nested serializer class file's contents" do
-      expect(subject.class.cache_key_base).to include nested_serializer_digest
+      expect(serializer.cache_key_base).to include nested_serializer_digest
     end
 
     it 'correctly formats the key' do
-      expect(subject.class.cache_key_base).to eq(
-        "#{subject.class}-#{serializer_file_digest}+#{nested_serializer_digest}"
+      expect(serializer.cache_key_base).to eq(
+        "#{serializer}-#{serializer_file_digest}+#{nested_serializer_digest}"
       )
     end
   end

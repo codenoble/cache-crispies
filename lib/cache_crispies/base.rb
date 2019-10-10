@@ -43,21 +43,100 @@ module CacheCrispies
       HashBuilder.new(self).call
     end
 
-    # Whether or not this serializer class should allow caching of results.
-    # It is set to false by default, but can be overridden in child classes.
+    # Get or set whether or not this serializer class should allow caching of
+    # results. It returns false by default, but can be overridden in child
+    # classes. Calling the method with an argument will set the value, calling
+    # it without any arguments will get the value.
     #
+    # @param value [Boolean] true to enable caching, false to disable
     # @return [Boolean]
-    def self.do_caching?
-      false
+    def self.do_caching(value = nil)
+      @do_caching ||= false
+
+      # method called with no args so act as a getter
+      return @do_caching if value.nil?
+
+      # method called with args so act as a setter
+      @do_caching = !!value
     end
 
-    # A JSON key to use as a root key on a non-collection serializable. by
-    # default it's the name of the class without the "Serializer" part. But it
-    # can be overridden in a subclass to be anything.
+    class << self
+      alias do_caching? do_caching
+    end
+
+    # Get or set a JSON key to use as a root key on a non-collection
+    # serializable. By default it's the name of the class without the
+    # "Serializer" part. But it can be overridden in a subclass to be anything.
+    # Calling the method with a key will set the key, calling it without any
+    # arguments will get the key.
+    #
+    # @param key [Symbol, nil] a symbol to be used as a key for a JSON-ready
+    # Hash, or nil for no key
+    # @return [Symbol, nil] a symbol to be used as a key for a JSON-ready Hash,
+    # or nil for no key
+    def self.key(*key)
+      @default_key ||= to_s.demodulize.chomp('Serializer').underscore.to_sym
+
+      # method called with no args so act as a getter
+      return defined?(@key) ? @key : @default_key if key.empty?
+
+      # method called with args so act as a setter
+      @key = key.first&.to_sym
+    end
+
+    # Get or set a JSON key to use as a root key on a collection-type
+    # serializable. By deafult it's the plural version of .key, but it can be
+    # overridden in a subclass to be anything. Calling the method with a key
+    # will set the key, calling it without any arguments will get the key.
     #
     # @return [Symbol] a symbol to be used as a key for a JSON-ready Hash
-    def self.key
-      to_s.demodulize.chomp('Serializer').underscore.to_sym
+    # @param key [Symbol, nil] a symbol to be used as a key for a JSON-ready
+    # Hash, or nil for no key
+    # @return [Symbol, nil] a symbol to be used as a key for a JSON-ready Hash,
+    # or nil for no key
+    def self.collection_key(*key)
+      @default_collection_key ||= self.key.to_s.pluralize.to_sym
+
+      # method called with no args so act as a getter
+      if key.empty?
+        if defined? @collection_key
+          return @collection_key
+        else
+          return @default_collection_key
+        end
+      end
+
+      # method called with args so act as a setter
+      @collection_key = key.first&.to_sym
+    end
+
+    # Call with a block returning an array of strings that should be added to
+    # the cache key for an instance of this serializer. Typically you'd add
+    # in string values to uniquely represent the values you're passing to
+    # the serializer so that they are cached separately. But it could also
+    # contain any custom logic about how to construct a cache key.
+    # Call without a block to act as a getter and return the value.
+    #
+    # @example cache based off models provided in options
+    #   cache_key_addons { |options| [options[:current_user].id] }
+    #
+    # @example time-based caching
+    #   cache_key_addons { |_options| [Date.today.to_s] }
+    #
+    # @param options [Hash] the options hash passed to the serializer, will be
+    # passed in here as well so you can refernce it if needed.
+    # @yield [options] a block that takes options passed to the serializer and
+    # should return an array of strings to use in the cache key
+    # @return [Array<String>]
+    def self.cache_key_addons(options = {}, &block)
+      @cache_key_addons ||= nil
+
+      if block_given?
+        @cache_key_addons = block
+        nil
+      else
+        Array(@cache_key_addons&.call(options))
+      end
     end
 
     # Get or set a cache key that can be changed whenever an outside dependency
@@ -70,43 +149,12 @@ module CacheCrispies
     # @return [String] a version string in any form
     def self.dependency_key(key = nil)
       @dependency_key ||= nil
+
+      # method called with no args so act as a getter
       return @dependency_key unless key
 
+      # method called with args so act as a setter
       @dependency_key = key.to_s
-    end
-
-    # A JSON key to use as a root key on a collection-type serializable. By
-    # deafult it's the plural version of .key, but it can be overridden in a
-    # subclass to be anything.
-    #
-    # @return [Symbol] a symbol to be used as a key for a JSON-ready Hash
-    def self.collection_key
-      return nil unless key
-
-      key.to_s.pluralize.to_sym
-    end
-
-    # An array of strings that should be added to the cache key for an instance
-    # of this serializer. Typically you'd add in the #cache_key or string value
-    # for any extra models or data passed in through the options hash here. But
-    # it could also contain any custom logic about how to construct a cache
-    # key. This method is meant to be overridden in subclasses.
-    #
-    # @example cache based off models provided in options
-    #   def self.cache_key_addons(options)
-    #     [options[:current_user].cache_key]
-    #   end
-    #
-    # @example time-based caching
-    #   def self.cache_key_addons(_options)
-    #     [Date.today.to_s]
-    #   end
-    #
-    # @param options [Hash] the options hash passed to the serializer, will be
-    # passed in here as well so you can refernce it if needed.
-    # @return [Array<String>]
-    def self.cache_key_addons(_options = {})
-      []
     end
 
     # Return a cache key string for the serializer class to be included in the

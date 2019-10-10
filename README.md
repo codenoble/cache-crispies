@@ -8,7 +8,7 @@ Why?
 
 There are a lot of Rails serializers out there, but there seem to be very few these days that are well maintained and performant. The ones that are, tend to lock you into a specific standard for how to format your JSON responses. And the idea of introducing breaking API changes across the board to a mature Rails app is daunting, to say the least.
 
-In additon, incorporating a caching layer (for performance reasons) into your serializers can be difficult unless you do it at a Rails view layer. And the serialization gems that work at the view layer tend to be slow in comparison to others. So it tends to be a one step forward one step back sort of solution.
+In addition, incorporating a caching layer (for performance reasons) into your serializers can be difficult unless you do it at a Rails view layer. And the serialization gems that work at the view layer tend to be slow in comparison to others. So it tends to be a one step forward one step back sort of solution.
 
 In light of all that, this gem was built with these goals in mind:
 1. Be fast
@@ -23,7 +23,7 @@ Requirements
 
 Features
 --------
-- **Fast** even without caching _(benchmarks and comparisons coming soon)_
+- **Fast** even without caching
 - **Flexible** lets you serialize data any way you want it
 - **Built-in Caching** _(documentation coming soon)_
 - **ETags** for easy HTTP caching
@@ -143,7 +143,7 @@ serialize :is_organic, from: :organic?
 
 ### Nest another serializer
 ```ruby
-serialize :incredients, with: IngredientSerializer
+serialize :ingredients, with: IngredientSerializer
 ```
 
 ### Merge attributes from another serializer
@@ -207,13 +207,8 @@ cache_render CerealSerializer, cereal, page: 42
 ### Set custom JSON keys
 ```ruby
 class CerealSerializer < CacheCrispies::Base
-  def self.key
-    :breakfast_cereal
-  end
-
-  def self.collection_key
-    :breakfast_cereals
-  end
+  key :breakfast_cereal
+  collection_key :breakfast_cereals
 end
 ```
 _Note that `collection_key` is the plural of `key` by default._
