@@ -22,7 +22,8 @@ module CacheCrispies
     #   argument's value
     def initialize(
       key,
-      from: nil, with: nil, to: nil, nesting: [], conditions: []
+      from: nil, with: nil, to: nil, nesting: [], conditions: [],
+      &block
     )
       @key = key
       @method_name = from || key || :itself
@@ -30,6 +31,7 @@ module CacheCrispies
       @coerce_to = to
       @nesting = Array(nesting)
       @conditions = Array(conditions)
+      @block = block
     end
 
     attr_reader(
@@ -38,23 +40,35 @@ module CacheCrispies
       :serializer,
       :coerce_to,
       :nesting,
-      :conditions
+      :conditions,
+      :block
     )
 
-    # Gets the value of the attribute for the given model and options
+    # Gets the value of the attribute for the given target object and options
     #
-    # @param model [Object] typically ActiveRecord::Base, but could be anything
+    # @param target [Object] typically ActiveRecord::Base, but could be anything
     # @param options [Hash] any optional values from the serializer instance
     # @return the value for the attribute for the given model and options
     # @raise [InvalidCoercionType] when an invalid argument is passed in the
     #   to: argument
-    def value_for(model, options)
-      value = model.public_send(method_name)
+    def value_for(target, options)
+      value =
+        if block?
+          block.call(target, options)
+        else
+          target.public_send(method_name)
+        end
 
       serializer ? serialize(value, options) : coerce(value)
     end
 
+
+
     private
+
+    def block?
+      !block.nil?
+    end
 
     def serialize(value, options)
       plan = CacheCrispies::Plan.new(serializer, value, options)

@@ -155,5 +155,15 @@ describe CacheCrispies::Attribute do
         end
       end
     end
+
+    context 'with a block' do
+      let(:instance) {
+        described_class.new(key) { |model, _opt| model.name.upcase }
+      }
+
+      it 'uses the return value of the block' do
+        expect(subject).to eq "CAP'N CRUNCH"
+      end
+    end
   end
 end

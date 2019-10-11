@@ -63,6 +63,9 @@ end
   class CerealSerializer < CacheCrispies::Base
     serialize :uid, from: :id, to: String
     serialize :name, :company
+    serialize :spiel do |cereal, _options|
+      'Made with whole grains!' if cereal.ingredients[:whole_grains] > 0.000001
+    end
     merge :itself, with: MarketingBsSerializer
 
     nest_in :about do
@@ -113,6 +116,7 @@ CerealSerializer.new(Cereal.first, be_trendy: true).as_json
   "uid": "42",
   "name": "Eyeholes",
   "company": "Needful Things",
+  "spiel": "Made with whole grains!",
   "tagline": "Part of a balanced breakfast",
   "small_print": "This doesn't mean jack-squat",
   "about": {
@@ -181,6 +185,12 @@ end
 _You can nest `show_if` blocks as deeply as you want._
 
 ### Render custom values
+```ruby
+serialize :fine_print do |model, options|
+  model.fine_print || options[:fine_print] || '*Contents may contain lots and lots of sugar'
+end
+```
+or
 ```ruby
 serialize :fine_print
 

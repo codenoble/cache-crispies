@@ -19,7 +19,9 @@ describe CacheCrispies::Base do
 
     nest_in :nested do
       nest_in :nested_again do
-        serialize :deeply_nested
+        serialize :deeply_nested do |model, _opts|
+          model.deeply_nested.to_s.upcase
+        end
       end
     end
 
@@ -55,7 +57,7 @@ describe CacheCrispies::Base do
         company: 'General Mills',
         nested: {
           nested_again: {
-            deeply_nested: true
+            deeply_nested: 'TRUE'
           }
         },
         nutrition_info: {
