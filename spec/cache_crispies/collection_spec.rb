@@ -17,7 +17,9 @@ describe CacheCrispies::Collection do
   let(:uncacheable_models) { [model1, model2] }
   let(:cacheable_models) {
     [model1, model2].tap do |models|
-      def models.cache_key() end
+      def models.cache_key()
+        'cacheable-collection-key'
+      end
     end
   }
   let(:collection) { cacheable_models }
@@ -33,7 +35,7 @@ describe CacheCrispies::Collection do
         it "doesn't cache the results" do
           expect(CacheCrispies::Plan).to_not receive(:new)
           expect(CacheCrispies).to_not receive :cache
-          expect(subject.as_json).to eq [ {name: name1}, {name: name2} ]
+          expect(subject.as_json).to eq [{ name: name1 }, { name: name2 }]
         end
       end
 
@@ -43,27 +45,58 @@ describe CacheCrispies::Collection do
         it "doesn't cache the results" do
           expect(CacheCrispies::Plan).to_not receive(:new)
           expect(CacheCrispies).to_not receive :cache
-          expect(subject.as_json).to eq [ {name: name1}, {name: name2} ]
+          expect(subject.as_json).to eq [{ name: name1 }, { name: name2 }]
         end
       end
     end
 
     context 'when it is cacheable' do
-      it 'caches the results' do
-        expect(CacheCrispies::Plan).to receive(:new).with(
-          serializer, model1, options
-        ).and_return double('plan-dbl-1', cache_key: 'cereal-key-1')
+      context 'when the collection cache key misses' do
+        before do
+          allow(CacheCrispies).to receive_message_chain(
+            :cache, :fetch
+          ).with('cacheable-collection-key').and_yield
+        end
 
-        expect(CacheCrispies::Plan).to receive(:new).with(
-          serializer, model2, options
-        ).and_return double('plan-dbl-2', cache_key: 'cereal-key-2')
+        it 'fetches the cache for each object in the collection' do
+          expect(CacheCrispies::Plan).to receive(:new).with(
+            serializer, model1, options
+          ).and_return double('plan-dbl-1', cache_key: 'cereal-key-1')
 
-        expect(CacheCrispies).to receive_message_chain(:cache, :fetch_multi).with(
-          %w[cereal-key-1 cereal-key-2]
-        ).and_yield('cereal-key-1').and_return(name: name1)
-          .and_yield('cereal-key-2').and_return(name: name2)
+          expect(CacheCrispies::Plan).to receive(:new).with(
+            serializer, model2, options
+          ).and_return double('plan-dbl-2', cache_key: 'cereal-key-2')
 
-        subject.as_json
+          expect(CacheCrispies).to receive_message_chain(
+            :cache, :fetch_multi
+          ).with(
+            %w[cereal-key-1 cereal-key-2]
+          ).and_yield('cereal-key-1').and_return(
+            name: name1
+          ).and_yield('cereal-key-2').and_return(
+            name: name2
+          )
+
+          subject.as_json
+        end
+      end
+
+      context 'when the collection cache key hits' do
+        let(:cache_dbl) { double('cache-store') }
+        before do
+          expect(CacheCrispies).to receive(:cache).and_return cache_dbl
+          allow(cache_dbl).to receive(
+            :fetch
+          ).with('cacheable-collection-key').and_return(
+            [{ name: name1 }, { name: name2 }]
+          )
+        end
+
+        it 'does not fetch the cache for any objects in the collection' do
+          expect(cache_dbl).to_not receive :fetch_multi
+
+          subject.as_json
+        end
       end
     end
   end

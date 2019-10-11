@@ -40,16 +40,18 @@ module CacheCrispies
     end
 
     def cached_json
-      models_by_cache_key = collection.each_with_object({}) do |model, hash|
-        plan = Plan.new(serializer, model, options)
+      CacheCrispies.cache.fetch(collection.cache_key) do
+        models_by_cache_key = collection.each_with_object({}) do |model, hash|
+          plan = Plan.new(serializer, model, options)
 
-        hash[plan.cache_key] = model
-      end
+          hash[plan.cache_key] = model
+        end
 
-      CacheCrispies.cache.fetch_multi(models_by_cache_key.keys) do |cache_key|
-        model = models_by_cache_key[cache_key]
+        CacheCrispies.cache.fetch_multi(models_by_cache_key.keys) do |cache_key|
+          model = models_by_cache_key[cache_key]
 
-        serializer.new(model, options).as_json
+          serializer.new(model, options).as_json
+        end
       end
     end
   end
