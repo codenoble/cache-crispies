@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'oj', '~> 3.7'
 
   spec.add_development_dependency 'activemodel', '>= 5.0.0', '< 6.1'
-  spec.add_development_dependency 'appraisal'
+  spec.add_development_dependency 'appraisal', '~> 2.2'
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'byebug', '~> 11.0'
   spec.add_development_dependency 'rspec', '~> 3.8.0'

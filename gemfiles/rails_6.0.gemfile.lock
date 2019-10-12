@@ -96,7 +96,7 @@ PLATFORMS
 
 DEPENDENCIES
   activemodel (>= 5.0.0, < 6.1)
-  appraisal
+  appraisal (~> 2.2)
   bundler (~> 2.0)
   byebug (~> 11.0)
   cache_crispies!
