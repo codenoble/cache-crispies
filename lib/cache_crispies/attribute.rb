@@ -78,10 +78,12 @@ module CacheCrispies
       !block.nil?
     end
 
+    # Here we'll render the attribute with a given serializer and attempt to
+    # cache the results for better cache reusability
     def serialize(value, options)
       plan = CacheCrispies::Plan.new(serializer, value, options)
 
-      if value.respond_to?(:each)
+      if plan.collection?
         plan.cache { Collection.new(value, serializer, options).as_json }
       else
         plan.cache { serializer.new(value, options).as_json }

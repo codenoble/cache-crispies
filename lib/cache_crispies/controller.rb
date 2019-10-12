@@ -34,9 +34,10 @@ module CacheCrispies
 
       serializer_json =
         if plan.collection?
-          # TODO: try to cache the whole collection here
-          cacheable.map do |one_cacheable|
-            plan.cache { serializer.new(one_cacheable, options).as_json }
+          plan.cache do
+            CacheCrispies::Collection.new(
+              cacheable, serializer, options
+            ).as_json
           end
         else
           plan.cache { serializer.new(cacheable, options).as_json }

@@ -17,9 +17,7 @@ describe CacheCrispies::Collection do
   let(:uncacheable_models) { [model1, model2] }
   let(:cacheable_models) {
     [model1, model2].tap do |models|
-      def models.cache_key()
-        'cacheable-collection-key'
-      end
+      def models.cache_key() end
     end
   }
   let(:collection) { cacheable_models }
@@ -70,30 +68,12 @@ describe CacheCrispies::Collection do
           expect(CacheCrispies).to receive_message_chain(
             :cache, :fetch_multi
           ).with(
-            %w[cereal-key-1 cereal-key-2]
+            'cereal-key-1', 'cereal-key-2'
           ).and_yield('cereal-key-1').and_return(
             name: name1
           ).and_yield('cereal-key-2').and_return(
             name: name2
           )
-
-          subject.as_json
-        end
-      end
-
-      context 'when the collection cache key hits' do
-        let(:cache_dbl) { double('cache-store') }
-        before do
-          expect(CacheCrispies).to receive(:cache).and_return cache_dbl
-          allow(cache_dbl).to receive(
-            :fetch
-          ).with('cacheable-collection-key').and_return(
-            [{ name: name1 }, { name: name2 }]
-          )
-        end
-
-        it 'does not fetch the cache for any objects in the collection' do
-          expect(cache_dbl).to_not receive :fetch_multi
 
           subject.as_json
         end
