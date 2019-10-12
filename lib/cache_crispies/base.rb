@@ -218,7 +218,11 @@ module CacheCrispies
     end
     private_class_method :nested_serializers
 
-    def self.serialize(*attribute_names, from: nil, with: nil, to: nil, &block)
+    def self.serialize(
+      *attribute_names,
+      from: nil, with: nil, through: nil, to: nil,
+      &block
+    )
       attribute_names.flatten.map { |att| att&.to_sym }.map do |attrib|
         current_nesting = Array(@nesting).dup
         current_conditions = Array(@conditions).dup
@@ -228,6 +232,7 @@ module CacheCrispies
             attrib,
             from: from,
             with: with,
+            through: through,
             to: to,
             nesting: current_nesting,
             conditions: current_conditions,

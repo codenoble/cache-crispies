@@ -22,12 +22,13 @@ module CacheCrispies
     #   argument's value
     def initialize(
       key,
-      from: nil, with: nil, to: nil, nesting: [], conditions: [],
+      from: nil, with: nil, through: nil, to: nil, nesting: [], conditions: [],
       &block
     )
       @key = key
       @method_name = from || key || :itself
       @serializer = with
+      @through = through
       @coerce_to = to
       @nesting = Array(nesting)
       @conditions = Array(conditions)
@@ -38,6 +39,7 @@ module CacheCrispies
       :method_name,
       :key,
       :serializer,
+      :through,
       :coerce_to,
       :nesting,
       :conditions,
@@ -55,6 +57,8 @@ module CacheCrispies
       value =
         if block?
           block.call(target, options)
+        elsif through?
+          target.public_send(through)&.public_send(method_name)
         else
           target.public_send(method_name)
         end
@@ -65,6 +69,10 @@ module CacheCrispies
 
 
     private
+
+    def through?
+      !through.nil?
+    end
 
     def block?
       !block.nil?

@@ -14,6 +14,7 @@ describe CacheCrispies::Attribute do
   let(:key) { :name }
   let(:from) { nil }
   let(:with) { nil }
+  let(:through) { nil }
   let(:to) { nil }
   let(:nesting) { [] }
   let(:conditions) { [] }
@@ -22,6 +23,7 @@ describe CacheCrispies::Attribute do
       key,
       from: from,
       with: with,
+      through: through,
       to: to,
       nesting: nesting,
       conditions: conditions
@@ -57,6 +59,23 @@ describe CacheCrispies::Attribute do
 
       it 'returns the value using the from attribute' do
         expect(subject).to eq spanish: spanish_name
+      end
+    end
+
+    context 'with a through: argument' do
+      let(:through) { :branding }
+      let(:model) { OpenStruct.new(branding: OpenStruct.new(name: name)) }
+
+      it 'returns the value from the "through" object' do
+        expect(subject).to eq name
+      end
+
+      context 'when the through method returns nil' do
+        let(:model) { OpenStruct.new(branding: nil) }
+
+        it 'returns nil' do
+          expect(subject).to be nil
+        end
       end
     end
 

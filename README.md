@@ -63,6 +63,7 @@ end
   class CerealSerializer < CacheCrispies::Base
     serialize :uid, from: :id, to: String
     serialize :name, :company
+    serialize :copyright, through: :legal_info
     serialize :spiel do |cereal, _options|
       'Made with whole grains!' if cereal.ingredients[:whole_grains] > 0.000001
     end
@@ -116,6 +117,7 @@ CerealSerializer.new(Cereal.first, be_trendy: true).as_json
   "uid": "42",
   "name": "Eyeholes",
   "company": "Needful Things",
+  "copyright": "© Need Things 2019",
   "spiel": "Made with whole grains!",
   "tagline": "Part of a balanced breakfast",
   "small_print": "This doesn't mean jack-squat",
@@ -144,6 +146,12 @@ How To...
 ```ruby
 serialize :is_organic, from: :organic?
 ```
+
+### Use an attribute from an associated object
+```ruby
+serialize :copyright, through: :legal_info
+```
+_If the `legal_info` method returns `nil`, `copyright` will also be `nil`._
 
 ### Nest another serializer
 ```ruby

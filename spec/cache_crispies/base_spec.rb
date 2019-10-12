@@ -28,6 +28,7 @@ describe CacheCrispies::Base do
     serialize :nutrition_info, with: NutritionSerializer
 
     serialize :organic, to: :bool
+    serialize :parent_company, through: :legal
 
     def id
       model.id.to_s
@@ -41,8 +42,9 @@ describe CacheCrispies::Base do
       company: 'General Mills',
       deeply_nested: true,
       nutrition_info: OpenStruct.new(calories: 1_000),
-      organic: 'true'
-      )
+      organic: 'true',
+      legal: OpenStruct.new(parent_company: 'Disney probably')
+    )
   end
 
   let(:serializer) { CacheCrispiesTestSerializer }
@@ -63,7 +65,8 @@ describe CacheCrispies::Base do
         nutrition_info: {
           calories: 1000
         },
-        organic: true
+        organic: true,
+        parent_company: 'Disney probably'
       )
     end
   end
@@ -209,12 +212,12 @@ describe CacheCrispies::Base do
     subject { instance.class.attributes }
 
     it 'contains all the attributes' do
-      expect(subject.length).to eq 6
+      expect(subject.length).to eq 7
     end
 
     it 'preserves the attribute order' do
       expect(subject.map(&:key)).to eq(
-        %i[id company name deeply_nested nutrition_info organic]
+        %i[id company name deeply_nested nutrition_info organic parent_company]
       )
     end
 
@@ -222,44 +225,65 @@ describe CacheCrispies::Base do
       expect(subject[0].method_name).to eq :id
       expect(subject[0].key).to eq :id
       expect(subject[0].serializer).to be nil
+      expect(subject[0].through).to be nil
       expect(subject[0].coerce_to).to be String
       expect(subject[0].nesting).to eq []
       expect(subject[0].conditions).to eq []
+      expect(subject[0].block).to be nil
 
       expect(subject[1].method_name).to eq :company
       expect(subject[1].key).to eq :company
       expect(subject[1].serializer).to be nil
+      expect(subject[1].through).to be nil
       expect(subject[1].coerce_to).to be String
       expect(subject[1].nesting).to eq []
       expect(subject[1].conditions).to eq []
+      expect(subject[1].block).to be nil
 
       expect(subject[2].method_name).to eq :brand
       expect(subject[2].key).to eq :name
       expect(subject[2].serializer).to be nil
+      expect(subject[2].through).to be nil
       expect(subject[2].coerce_to).to be nil
       expect(subject[2].nesting).to eq []
       expect(subject[2].conditions.length).to be 3
+      expect(subject[2].block).to be nil
 
       expect(subject[3].method_name).to eq :deeply_nested
       expect(subject[3].key).to eq :deeply_nested
       expect(subject[3].serializer).to be nil
+      expect(subject[3].through).to be nil
       expect(subject[3].coerce_to).to be nil
       expect(subject[3].nesting).to eq %i[nested nested_again]
       expect(subject[3].conditions).to eq []
+      expect(subject[3].block).to be_a_kind_of Proc
 
       expect(subject[4].method_name).to eq :nutrition_info
       expect(subject[4].key).to eq :nutrition_info
       expect(subject[4].serializer).to be NutritionSerializer
+      expect(subject[4].through).to be nil
       expect(subject[4].coerce_to).to be nil
       expect(subject[4].nesting).to eq []
       expect(subject[4].conditions).to eq []
+      expect(subject[4].block).to be nil
 
       expect(subject[5].method_name).to eq :organic
       expect(subject[5].key).to eq :organic
       expect(subject[5].serializer).to be nil
+      expect(subject[5].through).to be nil
       expect(subject[5].coerce_to).to be :bool
       expect(subject[5].nesting).to eq []
       expect(subject[5].conditions).to eq []
+      expect(subject[5].block).to be nil
+
+      expect(subject[6].method_name).to eq :parent_company
+      expect(subject[6].key).to eq :parent_company
+      expect(subject[6].serializer).to be nil
+      expect(subject[6].through).to be :legal
+      expect(subject[6].coerce_to).to be nil
+      expect(subject[6].nesting).to eq []
+      expect(subject[6].conditions).to eq []
+      expect(subject[6].block).to be nil
     end
   end
 end
