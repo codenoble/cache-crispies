@@ -57,7 +57,7 @@ module CacheCrispies
         end
 
       json_hash = plan.wrap(serializer_json)
-      json_hash[meta_key] = meta unless meta.empty?
+      json_hash[meta_key] = meta if meta.present?
 
       render_hash = { json: Oj.dump(json_hash, mode: OJ_MODE) }
       render_hash[:status] = status if status
