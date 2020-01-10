@@ -24,7 +24,8 @@ describe CacheCrispies::Controller do
 
   describe '#cache_render' do
     let(:etags) { false }
-    let(:single_json) { { cereal: { name: cereal_names.first } }.to_json }
+    let(:single_hash) { { cereal: { name: cereal_names.first } } }
+    let(:single_json) { single_hash.to_json }
     let(:collection_json) {
       { cereals: cereal_names.map { |name| { name: name } } }.to_json
     }
@@ -83,6 +84,35 @@ describe CacheCrispies::Controller do
           CerealSerializerForController,
           collection.first,
           status: 418
+        )
+      end
+    end
+
+    context 'with a meta: option' do
+      it 'adds a meta data hash to the JSON' do
+        expect(subject).to receive(:render).with(
+          json: single_hash.merge(meta: { page: 42 }).to_json
+        )
+
+        subject.cache_render(
+          CerealSerializerForController,
+          collection.first,
+          meta: { page: 42 }
+        )
+      end
+    end
+
+    context 'with a meta_key: option' do
+      it 'adds a meta data hash to the JSON with the provided key' do
+        expect(subject).to receive(:render).with(
+          json: single_hash.merge(test_meta_data: { page: 42 }).to_json
+        )
+
+        subject.cache_render(
+          CerealSerializerForController,
+          collection.first,
+          meta: { page: 42 },
+          meta_key: :test_meta_data
         )
       end
     end

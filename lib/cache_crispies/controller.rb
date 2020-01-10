@@ -16,16 +16,24 @@ module CacheCrispies
     #   CacheCrispies::Base
     # @param cacheable [Object] can be any object. But is typically a Rails
     #   model inheriting from ActiveRecord::Base
-    # @param [Hash] options any optional values from the serializer instance
-    # @option options [Symbol] :key the name of the root key to nest the JSON
+    # @param key [Symbol] the name of the root key to nest the JSON
     #   data under
-    # @option options [Boolean] :collection whether to render the data as a
+    # @param collection [Boolean] whether to render the data as a
     #   collection/array or a single object
-    # @option options [Integer, Symbol] :status the HTTP response status code
-    #    or Rails-supported symbol. See
+    # @param status [Integer, Symbol] the HTTP response status code or
+    #    Rails-supported symbol. See
     #    https://guides.rubyonrails.org/layouts_and_rendering.html#the-status-option
+    # @param meta [Hash] data to include as metadata under a root key
+    # @param meta_key [Symbol] they key to store the metadata under
+    # @param [Hash] options any optional values from the serializer instance
     # @return [void]
-    def cache_render(serializer, cacheable, key: nil, collection: nil, status: nil, **options)
+    def cache_render(
+      serializer,
+      cacheable,
+      key: nil, collection: nil, status: nil,
+      meta: {}, meta_key: :meta,
+      **options
+    )
       plan = CacheCrispies::Plan.new(
         serializer,
         cacheable,
@@ -48,7 +56,10 @@ module CacheCrispies
           plan.cache { serializer.new(cacheable, options).as_json }
         end
 
-      render_hash = { json: Oj.dump(plan.wrap(serializer_json), mode: OJ_MODE) }
+      json_hash = plan.wrap(serializer_json)
+      json_hash[meta_key] = meta unless meta.empty?
+
+      render_hash = { json: Oj.dump(json_hash, mode: OJ_MODE) }
       render_hash[:status] = status if status
 
       render render_hash

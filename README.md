@@ -262,6 +262,39 @@ CerealSerializer.new(cereal, page: 42).as_json
 cache_render CerealSerializer, cereal, page: 42
 ```
 
+### Include metadata
+```ruby
+  cache_render CerealSerializer, meta: { page: 42 }
+```
+
+This would render
+```json
+{
+  "meta": { "page": 42 },
+  "cereal": {
+    ...
+  }
+}
+```
+_Note that metadata is not cached._
+
+### Change the default metadata key
+The default metadata key is `meta`, but it can be changed with the `meta_key` option.
+
+```ruby
+  cache_render CerealSerializer, meta: { page: 42 }, meta_key: :pagination
+```
+
+This would render
+```json
+{
+  "pagination": { "page": 42 },
+  "cereal": {
+    ...
+  }
+}
+```
+
 ### Set custom JSON keys
 ```ruby
 class CerealSerializer < CacheCrispies::Base
