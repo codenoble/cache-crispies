@@ -198,6 +198,11 @@ serialize :ingredients, with: IngredientSerializer
 merge :legal_info, with: LegalInfoSerializer
 ```
 
+### Force another serializer to be rendered as a single or collection
+```ruby
+merge :prices, with: PricesSerializer, collection: false
+```
+
 ### Coerce to another data type
 ```ruby
 serialize :id, to: String

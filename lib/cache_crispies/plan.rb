@@ -16,14 +16,13 @@ module CacheCrispies
     #   data under
     # @option options [Boolean] :collection whether to render the data as a
     #   collection/array or a single object
-    def initialize(serializer, cacheable, options = {})
+    def initialize(serializer, cacheable, key: nil, collection: nil, **options)
       @serializer = serializer
       @cacheable = cacheable
 
-      opts = options.dup
-      @key = opts.delete(:key)
-      @collection = opts.delete(:collection)
-      @options = opts
+      @key = key
+      @collection = collection
+      @options = options
     end
 
     # Whether or not the cacheable should be treated like a collection

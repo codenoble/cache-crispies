@@ -14,6 +14,7 @@ module CacheCrispies
     # @param from [Symbol] the method on the model to call to get the value
     # @param with [CacheCrispies::Base] a serializer to use to serialize the
     # @param to [Class, Symbol] the data type to coerce the value into
+    # @param collection [Boolean] force rendering as single or collection
     # @param nesting [Array<Symbol>] the JSON keys this attribute will be
     #    nested inside
     # @param conditions [Array<CacheCrispies::Condition>] the show_if condition
@@ -22,7 +23,8 @@ module CacheCrispies
     #   argument's value
     def initialize(
       key,
-      from: nil, with: nil, through: nil, to: nil, nesting: [], conditions: [],
+      from: nil, with: nil, through: nil, to: nil, collection: nil,
+      nesting: [], conditions: [],
       &block
     )
       @key = key
@@ -30,6 +32,7 @@ module CacheCrispies
       @serializer = with
       @through = through
       @coerce_to = to
+      @collection = collection
       @nesting = Array(nesting)
       @conditions = Array(conditions)
       @block = block
@@ -41,6 +44,7 @@ module CacheCrispies
       :serializer,
       :through,
       :coerce_to,
+      :collection,
       :nesting,
       :conditions,
       :block
@@ -66,8 +70,6 @@ module CacheCrispies
       serializer ? serialize(value, options) : coerce(value)
     end
 
-
-
     private
 
     def through?
@@ -81,7 +83,9 @@ module CacheCrispies
     # Here we'll render the attribute with a given serializer and attempt to
     # cache the results for better cache reusability
     def serialize(value, options)
-      plan = CacheCrispies::Plan.new(serializer, value, options)
+      plan = CacheCrispies::Plan.new(
+        serializer, value, collection: collection, **options
+      )
 
       if plan.collection?
         plan.cache { Collection.new(value, serializer, options).as_json }

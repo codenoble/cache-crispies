@@ -25,8 +25,13 @@ module CacheCrispies
     #    or Rails-supported symbol. See
     #    https://guides.rubyonrails.org/layouts_and_rendering.html#the-status-option
     # @return [void]
-    def cache_render(serializer, cacheable, options = {})
-      plan = CacheCrispies::Plan.new(serializer, cacheable, options)
+    def cache_render(serializer, cacheable, key: nil, collection: nil, status: nil, **options)
+      plan = CacheCrispies::Plan.new(
+        serializer,
+        cacheable,
+        key: key, collection: collection,
+        **options
+      )
 
       if CacheCrispies.config.etags?
         response.weak_etag = plan.etag
@@ -44,7 +49,7 @@ module CacheCrispies
         end
 
       render_hash = { json: Oj.dump(plan.wrap(serializer_json), mode: OJ_MODE) }
-      render_hash[:status] = options[:status] if options.key?(:status)
+      render_hash[:status] = status if status
 
       render render_hash
     end
