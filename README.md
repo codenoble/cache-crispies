@@ -27,7 +27,7 @@ Features
 - **Flexible** lets you serialize data any way you want it
 - **Built-in Caching** _(documentation coming soon)_
 - **ETags** for easy HTTP caching
-- **Simlpe, Readable DSL**
+- **Simple, Readable DSL**
 
 Configuration
 -------------
