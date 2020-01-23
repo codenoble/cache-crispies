@@ -16,6 +16,8 @@ module CacheCrispies
     #
     # @return [Hash]
     def call
+      return unless @serializer.model
+
       hash = {}
 
       serializer.attributes.each do |attrib|

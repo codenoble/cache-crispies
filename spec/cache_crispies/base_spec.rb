@@ -69,6 +69,26 @@ describe CacheCrispies::Base do
         parent_company: 'Disney probably'
       )
     end
+
+    context 'when nutrition_info is nil' do
+      before { model.nutrition_info = nil }
+
+      it 'serializes to a hash' do
+        expect(subject.as_json).to eq(
+          id: '42',
+          name: 'Cookie Crisp',
+          company: 'General Mills',
+          nested: {
+            nested_again: {
+              deeply_nested: 'TRUE'
+            }
+          },
+          nutrition_info: nil,
+          organic: true,
+          parent_company: 'Disney probably'
+        )
+      end
+    end
   end
 
   describe '.key' do
