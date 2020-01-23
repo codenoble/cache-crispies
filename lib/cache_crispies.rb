@@ -19,6 +19,7 @@ module CacheCrispies
   autoload :Base,           'cache_crispies/base'
   autoload :Collection,     'cache_crispies/collection'
   autoload :Condition,      'cache_crispies/condition'
+  autoload :Optional,       'cache_crispies/optional'
   autoload :Configuration,  'cache_crispies/configuration'
   autoload :HashBuilder,    'cache_crispies/hash_builder'
   autoload :Memoizer,       'cache_crispies/memoizer'

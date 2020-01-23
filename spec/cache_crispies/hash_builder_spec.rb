@@ -8,6 +8,10 @@ describe CacheCrispies::HashBuilder do
     serialize :name
   end
 
+  class AllergySerializer < CacheCrispies::Base
+    serialize :name
+  end
+
   class MarketingBsSerializer < CacheCrispies::Base
     serialize :tagline, :small_print
 
@@ -29,6 +33,8 @@ describe CacheCrispies::HashBuilder do
       nest_in :nutritional_information do
         serialize :calories
         serialize :ingredients, with: IngredientSerializer
+
+        serialize :allergies, with: AllergySerializer, optional: true
       end
     end
 
@@ -54,6 +60,12 @@ describe CacheCrispies::HashBuilder do
       OpenStruct.new(name: 'Other Kind of Sugar')
     ]
   }
+  let(:allergies) {
+    [
+      OpenStruct.new(name: 'Peanuts'),
+      OpenStruct.new(name: 'Lactose')
+    ]
+  }
   let(:model) {
     OpenStruct.new(
       id: 42,
@@ -62,7 +74,8 @@ describe CacheCrispies::HashBuilder do
       calories: 1_000,
       organic: organic,
       tagline: "Part of a balanced breakfast",
-      ingredients: ingredients
+      ingredients: ingredients,
+      allergies: allergies
     )
   }
   let(:options) { { footnote_marker: '*' } }
@@ -139,6 +152,62 @@ describe CacheCrispies::HashBuilder do
             }
           })
         end
+      end
+    end
+
+    context 'when allergies are included' do
+      let(:options) { { footnote_marker: '*', include: :allergies } }
+
+      it 'includes the allergies' do
+        expect(subject.call).to eq ({
+          uid: '42',
+          name: 'Lucky Charms',
+          company: 'General Mills',
+          tagline: 'Part of a balanced breakfast*',
+          small_print: "*this doesn't mean jack-squat",
+          about: {
+            nutritional_information: {
+              calories: 1000,
+              ingredients: [
+                { name: 'Sugar' },
+                { name: 'Other Kind of Sugar' },
+              ],
+              allergies: [
+                { name: 'Peanuts' },
+                { name: 'Lactose' },
+              ]
+            }
+          },
+          health: {}
+        })
+      end
+    end
+
+    context 'when everything is included' do
+      let(:options) { { footnote_marker: '*', include: '*' } }
+
+      it 'includes the allergies' do
+        expect(subject.call).to eq ({
+          uid: '42',
+          name: 'Lucky Charms',
+          company: 'General Mills',
+          tagline: 'Part of a balanced breakfast*',
+          small_print: "*this doesn't mean jack-squat",
+          about: {
+            nutritional_information: {
+              calories: 1000,
+              ingredients: [
+                { name: 'Sugar' },
+                { name: 'Other Kind of Sugar' },
+              ],
+              allergies: [
+                { name: 'Peanuts' },
+                { name: 'Lactose' },
+              ]
+            }
+          },
+          health: {}
+        })
       end
     end
   end

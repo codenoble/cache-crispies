@@ -90,7 +90,7 @@ end
     nest_in :about do
       nest_in :nutritional_information do
         serialize :calories
-        serialize :ingredients, with: IngredientSerializer
+        serialize :ingredients, with: IngredientSerializer, optional: true
       end
     end
 
@@ -126,7 +126,7 @@ end
 
 ### Anywhere else
 ```ruby
-CerealSerializer.new(Cereal.first, be_trendy: true).as_json
+CerealSerializer.new(Cereal.first, be_trendy: true, include: :ingredients).as_json
 ```
 
 ### Output
