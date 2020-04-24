@@ -100,7 +100,7 @@ end
   end
 ```
 
-Put serializer files in `app/serializers/`. For instance this file should be at `app/serializers/cache_serializer.rb`.
+Put serializer files in `app/serializers/`. For instance this file should be at `app/serializers/cereal_serializer.rb`.
 
 ### In your Rails controller
 ```ruby
