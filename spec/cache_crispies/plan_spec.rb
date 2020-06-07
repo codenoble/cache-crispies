@@ -20,7 +20,7 @@ describe CacheCrispies::Plan do
   let(:model) { OpenStruct.new(name: 'Sugar Smacks', cache_key: model_cache_key) }
   let(:cacheable) { model }
   let(:options) { {} }
-  let(:instance) { described_class.new(serializer, cacheable, options) }
+  let(:instance) { described_class.new(serializer, cacheable, **options) }
   subject { instance }
 
   before do
