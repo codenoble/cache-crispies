@@ -223,7 +223,8 @@ module CacheCrispies
       from: nil, with: nil, through: nil, to: nil, collection: nil,
       &block
     )
-      attribute_names.flatten.map { |att| att&.to_sym }.map do |attrib|
+      attribute_names.flat_map do |attrib|
+        attrib = attrib&.to_sym
         current_nesting = Array(@nesting).dup
         current_conditions = Array(@conditions).dup
 
