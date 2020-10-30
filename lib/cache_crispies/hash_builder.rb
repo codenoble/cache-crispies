@@ -23,12 +23,12 @@ module CacheCrispies
       serializer.attributes.each do |attrib|
         deepest_hash = hash
 
+        next unless show?(attrib)
+
         attrib.nesting.each do |key|
           deepest_hash[key] ||= {}
           deepest_hash = deepest_hash[key]
         end
-
-        next unless show?(attrib)
 
         value = value_for(attrib)
 
