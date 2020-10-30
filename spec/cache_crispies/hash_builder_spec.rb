@@ -85,8 +85,7 @@ describe CacheCrispies::HashBuilder do
               { name: 'Other Kind of Sugar' },
             ]
           }
-        },
-        health: {}
+        }
       })
     end
 
