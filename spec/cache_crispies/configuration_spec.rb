@@ -39,4 +39,16 @@ describe CacheCrispies::Configuration do
       }.to change { subject.etags }.to true
     end
   end
+
+  describe '#cache_key_method' do
+    it 'is cache_key by default' do
+      expect(subject.cache_key_method).to eq :cache_key
+    end
+
+    it 'can be changed' do
+      expect {
+        subject.cache_key_method = :other_cache_key
+      }.to change { subject.cache_key_method }.to eq :other_cache_key
+    end
+  end
 end
