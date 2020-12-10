@@ -24,5 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'byebug', '~> 11.0'
   spec.add_development_dependency 'rspec', '~> 3.8.0'
+  spec.add_development_dependency 'rubocop', '~> 1.6.1'
   spec.add_development_dependency 'simplecov', '~> 0.17'
 end

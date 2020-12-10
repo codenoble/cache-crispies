@@ -54,7 +54,7 @@ describe CacheCrispies::Attribute do
 
     context 'with a with: argument' do
       let(:spanish_name) { 'Capitán Crujido' }
-      let(:name) { OpenStruct.new(spanish: spanish_name)}
+      let(:name) { OpenStruct.new(spanish: spanish_name) }
       let(:with) { NameSerializer }
 
       it 'returns the value using the from attribute' do

@@ -21,7 +21,7 @@ describe CacheCrispies::Condition do
     end
 
     context 'when the block has one argument' do
-      let(:block) { ->(_arg1) { } }
+      let(:block) { ->(_arg1) {} }
 
       it 'calls the block with the model only' do
         expect(block).to receive(:call).with(model)
