@@ -16,3 +16,6 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+
+# appraisal lock files
+*.gemfile.lock
