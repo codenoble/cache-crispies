@@ -20,6 +20,8 @@ matrix:
   exclude:
     - rvm: 2.4.9
       gemfile: gemfiles/rails_6.0.gemfile
+    - rvm: 2.4.9
+      gemfile: gemfiles/rails_6.1.gemfile
 
 before_install:
   - gem update --system
