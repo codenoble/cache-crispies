@@ -3,7 +3,7 @@ PATH
   specs:
     cache_crispies (1.1.3)
       oj (~> 3.7)
-      railties (>= 5.0.0, < 6.1)
+      railties (>= 5.0.0, < 6.2)
 
 GEM
   remote: https://rubygems.org/
@@ -115,7 +115,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activemodel (>= 5.0.0, < 6.1)
+  activemodel (>= 5.0.0, < 6.2)
   appraisal (~> 2.2)
   bundler (~> 2.0)
   byebug (~> 11.0)
