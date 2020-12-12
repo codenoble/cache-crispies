@@ -1,4 +1,4 @@
-Cache Crispies [![Build Status](https://travis-ci.org/codenoble/cache-crispies.svg?branch=master)](https://travis-ci.org/codenoble/cache-crispies) [![Maintainability](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/maintainability)](https://codeclimate.com/github/codenoble/cache-crispies/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/test_coverage)](https://codeclimate.com/github/codenoble/cache-crispies/test_coverage)
+Cache Crispies [![CircleCI](https://circleci.com/gh/codenoble/cache-crispies.svg?style=shield)](https://circleci.com/gh/codenoble/cache-crispies) [![Maintainability](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/maintainability)](https://codeclimate.com/github/codenoble/cache-crispies/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/test_coverage)](https://codeclimate.com/github/codenoble/cache-crispies/test_coverage)
 ==============
 
 Speedy Rails JSON serialization with built-in caching.
