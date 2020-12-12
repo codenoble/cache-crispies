@@ -49,6 +49,16 @@ end
 
 _`cache_store` is set to `Rails.cache` by default, or `ActiveSupport::Cache::NullStore.new` if `Rails.cache` is `nil`._
 
+### Custom model cache key
+```ruby
+CacheCrispies.configure do |conf|
+  conf.cache_key_method = :custom_cache_key_method_name
+end
+```
+`cache_key_method` must be set to the name of the method the model responds to and returns a string value.
+
+_`cache_key_method` is set to `:cache_key` by default._
+
 Usage
 -----
 ### A simple serializer
@@ -358,6 +368,9 @@ end
 ```
 
 In this scenario, you should include `options[:current_user].id` in the `cache_key_addons`. Otherwise, the user's full name could get cached, and users, who shouldn't see it, would.
+
+It is also possible to configure the method CacheCrispies calls on the model via the `config.cacheable_cache_key`
+configuration option.
 
 ### Bust the Cache Key
 ```ruby

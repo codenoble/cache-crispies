@@ -125,6 +125,17 @@ describe CacheCrispies::Plan do
         )
       end
     end
+
+    context 'with a configured cache_key_method' do
+      let(:custom_cache_key) { 'custom-cache-key' }
+      let(:model) { OpenStruct.new(name: 'Sugar Smacks', custom_cache_key: custom_cache_key) }
+
+      it "includes the cacheable #custom_cache_key" do
+        expect(CacheCrispies.config).to receive(:cache_key_method).and_return :custom_cache_key
+
+        expect(subject.cache_key).to include custom_cache_key
+      end
+    end
   end
 
   describe '#cache' do

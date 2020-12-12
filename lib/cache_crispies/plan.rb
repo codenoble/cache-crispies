@@ -58,7 +58,7 @@ module CacheCrispies
           serializer.cache_key_base,
           serializer.dependency_key,
           addons_key,
-          cacheable.cache_key
+          cacheable_cache_key
         ].flatten.compact.join(CACHE_KEY_SEPARATOR)
     end
 
@@ -101,7 +101,11 @@ module CacheCrispies
     end
 
     def cache?
-      serializer.do_caching? && cacheable.respond_to?(:cache_key)
+      serializer.do_caching? && cacheable.respond_to?(CacheCrispies.config.cache_key_method)
+    end
+
+    def cacheable_cache_key
+      cacheable.public_send(CacheCrispies.config.cache_key_method)
     end
 
     def addons_key
