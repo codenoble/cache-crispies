@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  ruby: circleci/ruby@0.1.2 
+  ruby: circleci/ruby@0.1.2
 
 jobs:
   build:
@@ -14,15 +14,19 @@ jobs:
       - run:
           name: Which bundler?
           command: bundle -v
-      - ruby/bundle-install
+      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
       - run:
           name: Prep Code Climate test coverage reporting
           command: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
+      - run: mkdir ~/rspec
       - run:
           name: RSpec tests
           command: |
             ./cc-test-reporter before-build
-            bundle exec rspec
+            bundle exec rspec --format progress --format RspecJunitFormatter -o ~/rspec/rspec.xml
             ./cc-test-reporter after-build --coverage-input-type simplecov --exit-code $?
+          when: always
+      - store_test_results:
+          path: ~/rspec
