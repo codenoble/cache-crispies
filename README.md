@@ -434,6 +434,26 @@ Tips
 To delete all cache entries in Redis:
 `redis-cli --scan --pattern "*cache-crispies*" | xargs redis-cli unlink`
 
+Running Tests Locally
+---------------------
+
+We use [https://github.com/thoughtbot/appraisal](Appraisal) to run tests against multiple Rails versions.
+
+```shell
+bundle exec appraisal install
+bundle exec appraisal rspec
+```
+
+Contributing
+------------
+
+Feel free to contribute by opening a Pull Request. But before you do, please be sure to follow the steps below.
+
+- Run `bundle exec appraisal install` to update all of the appropriate gemfiles.
+- Run `bundle exec appraisal rspec` to ensure all tests are passing.
+- Check the `rspec` output around test coverage. Try to maintain `LOC (100.0%) covered`, if at all possible.
+- After pushing up your pull request, check the status from [https://circleci.com/](CircleCI) and [https://codeclimate.com/](Code Climate) to ensure they pass.
+
 License
 -------
 MIT
