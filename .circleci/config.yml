@@ -23,7 +23,7 @@ jobs:
           command: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
-      - run: mkdir ~/tmp/rspec
+      - run: mkdir -p ~/tmp/rspec
       - run:
           name: RSpec tests
           command: |
