@@ -1,4 +1,4 @@
-Cache Crispies [![Build Status](https://travis-ci.org/codenoble/cache-crispies.svg?branch=master)](https://travis-ci.org/codenoble/cache-crispies) [![Maintainability](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/maintainability)](https://codeclimate.com/github/codenoble/cache-crispies/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/test_coverage)](https://codeclimate.com/github/codenoble/cache-crispies/test_coverage)
+Cache Crispies [![CircleCI](https://circleci.com/gh/codenoble/cache-crispies.svg?style=shield)](https://circleci.com/gh/codenoble/cache-crispies) [![Maintainability](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/maintainability)](https://codeclimate.com/github/codenoble/cache-crispies/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/test_coverage)](https://codeclimate.com/github/codenoble/cache-crispies/test_coverage)
 ==============
 
 Speedy Rails JSON serialization with built-in caching.
@@ -433,6 +433,26 @@ Tips
 ----
 To delete all cache entries in Redis:
 `redis-cli --scan --pattern "*cache-crispies*" | xargs redis-cli unlink`
+
+Running Tests Locally
+---------------------
+
+We use [Appraisal](https://github.com/thoughtbot/appraisal) to run tests against multiple Rails versions.
+
+```shell
+bundle exec appraisal install
+bundle exec appraisal rspec
+```
+
+Contributing
+------------
+
+Feel free to contribute by opening a Pull Request. But before you do, please be sure to follow the steps below.
+
+- Run `bundle exec appraisal install` to update all of the appropriate gemfiles.
+- Run `bundle exec appraisal rspec` to ensure all tests are passing.
+- Check the `rspec` output around test coverage. Try to maintain `LOC (100.0%) covered`, if at all possible.
+- After pushing up your pull request, check the status from [CircleCI](https://circleci.com) and [Code Climate](https://codeclimate.com) to ensure they pass.
 
 License
 -------
