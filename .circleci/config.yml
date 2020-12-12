@@ -1,0 +1,28 @@
+version: 2.1
+orbs:
+  ruby: circleci/ruby@0.1.2 
+
+jobs:
+  build:
+    environment:
+      CC_TEST_REPORTER_ID: 62d0bb489c63619002c31f7f6d7b7243bcdedcd5822ebd5abb02353c83b56789
+    docker:
+      - image: circleci/ruby:2.7
+    executor: ruby/default
+    steps:
+      - checkout
+      - run:
+          name: Which bundler?
+          command: bundle -v
+      - ruby/bundle-install
+      - run:
+          name: Prep Code Climate test coverage reporting
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: RSpec tests
+          command: |
+            ./cc-test-reporter before-build
+            bundle exec rspec
+            ./cc-test-reporter after-build --coverage-input-type simplecov --exit-code $?
