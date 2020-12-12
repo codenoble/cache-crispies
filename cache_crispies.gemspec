@@ -24,5 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'byebug', '~> 11.0'
   spec.add_development_dependency 'rspec', '~> 3.8.0'
-  spec.add_development_dependency 'simplecov', '~> 0.17'
+  # For now, we need to lock simplecov at 0.17 for codeclimate support. See
+  # https://github.com/codeclimate/test-reporter/issues/413 for details.
+  spec.add_development_dependency 'simplecov', '0.17'
 end
