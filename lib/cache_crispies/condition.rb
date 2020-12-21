@@ -19,19 +19,20 @@ module CacheCrispies
       block.object_id
     end
 
-    # Test the truthiness of the condition against a model and options
+    # Test the truthiness of the condition against the serializer instance
     #
-    # @param model [Object] typically ActiveRecord::Base, but could be anything
-    # @param options [Hash] any optional values from the serializer instance
+    # @param serializer [Object] CacheCrispies::Base serializer instance
     # @return [Boolean] the condition's truthiness
-    def true_for?(model, options = {})
+    def true_for?(serializer)
+      return !!serializer.public_send(block) if block.is_a?(Symbol)
+
       !!case block.arity
         when 0
           block.call
         when 1
-          block.call(model)
+          block.call(serializer.model)
         else
-          block.call(model, options)
+          block.call(serializer.model, serializer.options)
         end
     end
 

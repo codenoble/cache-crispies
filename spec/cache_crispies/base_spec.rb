@@ -11,7 +11,7 @@ describe CacheCrispies::Base do
 
     show_if -> { true } do
       show_if -> { true } do
-        show_if -> { true } do
+        show_if :visible? do
           serialize :name, from: :brand
         end
       end
@@ -32,6 +32,10 @@ describe CacheCrispies::Base do
 
     def id
       model.id.to_s
+    end
+
+    def visible?
+      true
     end
   end
 

@@ -51,7 +51,7 @@ module CacheCrispies
       # show_if block
       attribute.conditions.all? do |cond|
         condition_results.fetch(cond.uid) do
-          cond.true_for?(serializer.model, serializer.options)
+          cond.true_for?(serializer)
         end
       end
     end
