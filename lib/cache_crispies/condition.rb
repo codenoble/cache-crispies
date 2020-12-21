@@ -26,18 +26,22 @@ module CacheCrispies
     def true_for?(serializer)
       return !!serializer.public_send(block) if block.is_a?(Symbol)
 
-      !!case block.arity
-        when 0
-          block.call
-        when 1
-          block.call(serializer.model)
-        else
-          block.call(serializer.model, serializer.options)
-        end
+      !!execute_block(serializer.model, serializer.options)
     end
 
     private
 
     attr_reader :block
+
+    def execute_block(model, options)
+      case block.arity
+      when 0
+        block.call
+      when 1
+        block.call(model)
+      else
+        block.call(model, options)
+      end
+    end
   end
 end
