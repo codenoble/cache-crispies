@@ -13,6 +13,8 @@ module CacheCrispies
     # @param key [Symbol] the JSON key for this attribute
     # @param from [Symbol] the method on the model to call to get the value
     # @param with [CacheCrispies::Base] a serializer to use to serialize the
+    # @param through [Symbol] the method through which to serialize the value
+    # @param map [Symbol] the method to which the value will be mapped further
     # @param to [Class, Symbol] the data type to coerce the value into
     # @param collection [Boolean] force rendering as single or collection
     # @param nesting [Array<Symbol>] the JSON keys this attribute will be
@@ -23,7 +25,7 @@ module CacheCrispies
     #   argument's value
     def initialize(
       key,
-      from: nil, with: nil, through: nil, to: nil, collection: nil,
+      from: nil, with: nil, through: nil, map: nil, to: nil, collection: nil,
       nesting: [], conditions: [],
       &block
     )
@@ -31,6 +33,7 @@ module CacheCrispies
       @method_name = from || key || :itself
       @serializer = with
       @through = through
+      @map = map
       @coerce_to = to
       @collection = collection
       @nesting = Array(nesting)
@@ -43,6 +46,7 @@ module CacheCrispies
       :key,
       :serializer,
       :through,
+      :map,
       :coerce_to,
       :collection,
       :nesting,
@@ -63,6 +67,8 @@ module CacheCrispies
           block.call(target, options)
         elsif through?
           target.public_send(through)&.public_send(method_name)
+        elsif map?
+          target.public_send(method_name)&.public_send(map)
         else
           target.public_send(method_name)
         end
@@ -74,6 +80,10 @@ module CacheCrispies
 
     def through?
       !through.nil?
+    end
+
+    def map?
+      !map.nil?
     end
 
     def block?

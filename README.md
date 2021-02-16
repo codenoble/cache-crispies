@@ -82,6 +82,7 @@ end
     serialize :uid, from: :id, to: String
     serialize :name, :company
     serialize :copyright, through: :legal_info
+    serialize :address, map: :full_format
     serialize :spiel do |cereal, _options|
       'Made with whole grains!' if cereal.ingredients[:whole_grains] > 0.000001
     end
@@ -197,6 +198,12 @@ serialize :is_organic, from: :organic?
 serialize :copyright, through: :legal_info
 ```
 _If the `legal_info` method returns `nil`, `copyright` will also be `nil`._
+
+### Map a value via a method on that value
+```ruby
+serialize :address, map: :full_format
+```
+_If the `address` method returns `nil`, the result will also be `nil`._
 
 ### Nest another serializer
 ```ruby

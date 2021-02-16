@@ -15,6 +15,7 @@ describe CacheCrispies::Attribute do
   let(:from) { nil }
   let(:with) { nil }
   let(:through) { nil }
+  let(:map) { nil }
   let(:to) { nil }
   let(:nesting) { [] }
   let(:conditions) { [] }
@@ -24,6 +25,7 @@ describe CacheCrispies::Attribute do
       from: from,
       with: with,
       through: through,
+      map: map,
       to: to,
       nesting: nesting,
       conditions: conditions
@@ -72,6 +74,23 @@ describe CacheCrispies::Attribute do
 
       context 'when the through method returns nil' do
         let(:model) { OpenStruct.new(branding: nil) }
+
+        it 'returns nil' do
+          expect(subject).to be nil
+        end
+      end
+    end
+
+    context 'with a map: argument' do
+      let(:map) { :branding }
+      let(:model) { OpenStruct.new(name: OpenStruct.new(branding: name)) }
+
+      it 'returns the value from the "map" method on the target' do
+        expect(subject).to eq name
+      end
+
+      context 'when the base method returns nil' do
+        let(:model) { OpenStruct.new(name: nil) }
 
         it 'returns nil' do
           expect(subject).to be nil

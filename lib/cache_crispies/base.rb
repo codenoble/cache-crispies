@@ -220,7 +220,7 @@ module CacheCrispies
 
     def self.serialize(
       *attribute_names,
-      from: nil, with: nil, through: nil, to: nil, collection: nil,
+      from: nil, with: nil, through: nil, map: nil, to: nil, collection: nil,
       &block
     )
       attribute_names.flat_map do |attrib|
@@ -234,6 +234,7 @@ module CacheCrispies
             from: from,
             with: with,
             through: through,
+            map: map,
             to: to,
             collection: collection,
             nesting: current_nesting,
