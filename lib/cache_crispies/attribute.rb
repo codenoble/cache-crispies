@@ -15,6 +15,8 @@ module CacheCrispies
     # @param with [CacheCrispies::Base] a serializer to use to serialize the
     # @param to [Class, Symbol] the data type to coerce the value into
     # @param collection [Boolean] force rendering as single or collection
+    # @param optional [Boolean] render only if included in the option's
+    #   `included` array
     # @param nesting [Array<Symbol>] the JSON keys this attribute will be
     #    nested inside
     # @param conditions [Array<CacheCrispies::Condition>] the show_if condition
@@ -24,6 +26,7 @@ module CacheCrispies
     def initialize(
       key,
       from: nil, with: nil, through: nil, to: nil, collection: nil,
+      optional: nil,
       nesting: [], conditions: [],
       &block
     )
@@ -36,6 +39,8 @@ module CacheCrispies
       @nesting = Array(nesting)
       @conditions = Array(conditions)
       @block = block
+
+      @conditions << Optional.new(key) if optional
     end
 
     attr_reader(
