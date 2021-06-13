@@ -23,8 +23,8 @@ module CacheCrispies
     # @param model [Object] typically ActiveRecord::Base, but could be anything
     # @param options [Hash] any optional values from the serializer instance
     # @return [Boolean] the condition's truthiness
-    def true_for?(_model, options = {})
-      included = Array(options.fetch(:include, [])).map(&:to_sym)
+    def true_for?(serializer)
+      included = Array(serializer.options.fetch(:include, [])).map(&:to_sym)
 
       included.include?(key) || included.include?(:*)
     end
