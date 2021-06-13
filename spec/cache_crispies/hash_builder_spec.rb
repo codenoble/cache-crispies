@@ -177,8 +177,7 @@ describe CacheCrispies::HashBuilder do
                 { name: 'Lactose' },
               ]
             }
-          },
-          health: {}
+          }
         })
       end
     end
@@ -205,8 +204,7 @@ describe CacheCrispies::HashBuilder do
                 { name: 'Lactose' },
               ]
             }
-          },
-          health: {}
+          }
         })
       end
     end
