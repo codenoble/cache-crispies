@@ -16,10 +16,10 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(spec)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'railties', '>= 5.0.0', '< 7.0'
+  spec.add_dependency 'railties', '>= 5.0.0', '< 8.0'
   spec.add_dependency 'oj', '~> 3.7'
 
-  spec.add_development_dependency 'activemodel', '>= 5.0.0', '< 7.0'
+  spec.add_development_dependency 'activemodel', '>= 5.0.0', '< 8.0'
   spec.add_development_dependency 'appraisal', '~> 2.2'
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'byebug', '~> 11.0'
