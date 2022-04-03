@@ -41,7 +41,7 @@ module CacheCrispies
 
     def cached_json
       models_by_cache_key = collection.each_with_object({}) do |model, hash|
-        plan = Plan.new(serializer, model, options)
+        plan = Plan.new(serializer, model, **options)
 
         hash[plan.cache_key] = model
       end
