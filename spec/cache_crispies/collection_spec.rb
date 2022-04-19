@@ -58,22 +58,51 @@ describe CacheCrispies::Collection do
 
         it 'fetches the cache for each object in the collection' do
           expect(CacheCrispies::Plan).to receive(:new).with(
-            serializer, model1, options
+            serializer, model1, **options
           ).and_return double('plan-dbl-1', cache_key: 'cereal-key-1')
 
           expect(CacheCrispies::Plan).to receive(:new).with(
-            serializer, model2, options
+            serializer, model2, **options
           ).and_return double('plan-dbl-2', cache_key: 'cereal-key-2')
 
+          expect(CacheCrispies).to receive_message_chain(:cache, :read_multi).
+            with('cereal-key-1', 'cereal-key-2').and_return({})
+
           expect(CacheCrispies).to receive_message_chain(
-            :cache, :fetch_multi
+            :cache, :write_multi
           ).with(
-            'cereal-key-1', 'cereal-key-2'
-          ).and_yield('cereal-key-1').and_return(
-            name: name1
-          ).and_yield('cereal-key-2').and_return(
-            name: name2
+            { 'cereal-key-1' => { name: name1 }, 'cereal-key-2' => { name: name2 } }
           )
+
+          subject.as_json
+        end
+      end
+
+      context 'when the collection cache key does not miss' do
+        before do
+          allow(CacheCrispies).to receive_message_chain(
+            :cache, :fetch
+          ).with('cacheable-collection-key').and_yield
+        end
+
+        it 'fetches the cache for each object in the collection' do
+          expect(CacheCrispies::Plan).to receive(:new).with(
+            serializer, model1, **options
+          ).and_return double('plan-dbl-1', cache_key: 'cereal-key-1')
+
+          expect(CacheCrispies::Plan).to receive(:new).with(
+            serializer, model2, **options
+          ).and_return double('plan-dbl-2', cache_key: 'cereal-key-2')
+
+          expect(CacheCrispies).to receive_message_chain(:cache, :read_multi).
+            with('cereal-key-1', 'cereal-key-2').
+            and_return(
+              { 'cereal-key-1' => { name: name1 }, 'cereal-key-2' => { name: name2 } }
+            )
+
+          expect(CacheCrispies).to receive_message_chain(
+            :cache, :write_multi
+          ).with({})
 
           subject.as_json
         end

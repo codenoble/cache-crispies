@@ -76,12 +76,17 @@ end
 
     do_caching true
 
+    preloads do |cereals, options|
+      ActiveRecord::Associations::Preloader.new.preload(cereals, :maker)
+    end
+
     cache_key_addons { |options| options[:be_trendy] }
     dependency_key 'V3'
 
     serialize :uid, from: :id, to: String
     serialize :name, :company
     serialize :copyright, through: :legal_info
+    serialize :maker_name, through: :maker
     serialize :spiel do |cereal, _options|
       'Made with whole grains!' if cereal.ingredients[:whole_grains] > 0.000001
     end
@@ -136,6 +141,7 @@ CerealSerializer.new(Cereal.first, be_trendy: true, include: :ingredients).as_js
   "name": "Eyeholes",
   "company": "Needful Things",
   "copyright": "© Need Things 2019",
+  "maker_name": "Cereal Inc",
   "spiel": "Made with whole grains!",
   "tagline": "Part of a balanced breakfast",
   "small_print": "This doesn't mean jack-squat",
@@ -256,6 +262,15 @@ def fine_print
   model.fine_print || options[:fine_print] || '*Contents may contain lots and lots of sugar'
 end
 ```
+
+### Preload data to avoid n+1 issues when rendering a collection of items
+```ruby
+preloads do |cereals, options|
+  ActiveRecord::Associations::Preloader.new.preload(cereals, :maker)
+end
+```
+
+When a serializer is cached, the `cereals` will contain only those entries for which no cache was found.
 
 ### Include other data
 ```ruby
