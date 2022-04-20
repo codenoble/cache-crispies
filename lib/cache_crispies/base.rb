@@ -178,6 +178,15 @@ module CacheCrispies
       ).uniq.sort
     end
 
+    def self.preloads(collection = [], options = {}, &block)
+      if block_given?
+        @preloads = block
+        nil
+      else
+        @preloads&.call(collection, options)
+      end
+    end
+
     private
 
     def self.file_hash

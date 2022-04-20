@@ -34,6 +34,7 @@ module CacheCrispies
     attr_reader :collection, :serializer, :options
 
     def uncached_json
+      @serializer.preloads(collection, options)
       collection.map do |model|
         serializer.new(model, options).as_json
       end
@@ -46,11 +47,18 @@ module CacheCrispies
         hash[plan.cache_key] = model
       end
 
-      CacheCrispies.cache.fetch_multi(*models_by_cache_key.keys) do |cache_key|
-        model = models_by_cache_key[cache_key]
+      already_cached = CacheCrispies.cache.read_multi(*models_by_cache_key.keys)
 
-        serializer.new(model, options).as_json
-      end.values
+      missing_keys = models_by_cache_key.keys - already_cached.keys
+      missing_values = models_by_cache_key.fetch_values(*missing_keys)
+      @serializer.preloads(missing_values, options)
+
+      new_entries = missing_keys.each_with_object({}) do |key, hash|
+        hash[key] = serializer.new(models_by_cache_key[key], options).as_json
+      end
+
+      CacheCrispies.cache.write_multi(new_entries)
+      new_entries.values + already_cached.values
     end
   end
 end
