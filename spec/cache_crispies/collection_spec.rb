@@ -58,11 +58,11 @@ describe CacheCrispies::Collection do
 
         it 'fetches the cache for each object in the collection' do
           expect(CacheCrispies::Plan).to receive(:new).with(
-            serializer, model1, options
+            serializer, model1
           ).and_return double('plan-dbl-1', cache_key: 'cereal-key-1')
 
           expect(CacheCrispies::Plan).to receive(:new).with(
-            serializer, model2, options
+            serializer, model2
           ).and_return double('plan-dbl-2', cache_key: 'cereal-key-2')
 
           expect(CacheCrispies).to receive_message_chain(
