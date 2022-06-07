@@ -1,0 +1,9 @@
+version: "3.5"
+
+services:
+  specs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/srv/cache-crispies
