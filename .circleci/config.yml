@@ -15,6 +15,7 @@ jobs:
           name: Which bundler?
           command: bundle -v
       - ruby/install-deps:
+          bundler-version: "2.3.15"
           with-cache: false
       - run:
           name: Installing all gem versions via Appraisal
