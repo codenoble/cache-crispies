@@ -1,13 +1,13 @@
 version: 2.1
 orbs:
-  ruby: circleci/ruby@0.1.2
+  ruby: circleci/ruby@1.8.0
 
 jobs:
   build:
     environment:
       CC_TEST_REPORTER_ID: 62d0bb489c63619002c31f7f6d7b7243bcdedcd5822ebd5abb02353c83b56789
     docker:
-      - image: circleci/ruby:3.1
+      - image: cimg/ruby:3.1.2
     executor: ruby/default
     steps:
       - checkout
