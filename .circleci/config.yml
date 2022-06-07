@@ -14,7 +14,7 @@ jobs:
       - run:
           name: Which bundler?
           command: bundle -v
-      - ruby/bundle-install
+      - ruby/install-deps
       - run:
           name: Installing all gem versions via Appraisal
           command: bundle exec appraisal install
