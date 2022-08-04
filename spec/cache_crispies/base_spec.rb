@@ -39,6 +39,15 @@ describe CacheCrispies::Base do
     end
   end
 
+  class MyEngine
+    def self.root
+    end
+  end
+
+  class CacheCrispiesEngineTestSerializer < CacheCrispiesTestSerializer
+    engine MyEngine
+  end
+
   let(:model) do
     OpenStruct.new(
       id: 42,
@@ -52,6 +61,7 @@ describe CacheCrispies::Base do
   end
 
   let(:serializer) { CacheCrispiesTestSerializer }
+  let(:engine_serializer) { CacheCrispiesEngineTestSerializer }
   let(:instance) { serializer.new(model) }
   subject { instance }
 
@@ -161,6 +171,24 @@ describe CacheCrispies::Base do
     end
   end
 
+  describe '.engine' do
+    it 'defaults to Rails' do
+      expect(serializer.engine).to eq Rails
+    end
+
+    context 'when called with an argument' do
+      after { serializer.remove_instance_variable :@engine }
+
+      it 'sets and returns a value' do
+        expect {
+          serializer.engine MyEngine
+        }.to change {
+          serializer.engine
+        }.from(Rails).to MyEngine
+      end
+    end
+  end
+
   describe '.cache_key_addons' do
     it 'returns an empty array by default' do
       expect(serializer.cache_key_addons).to eq []
@@ -203,6 +231,12 @@ describe CacheCrispies::Base do
     let(:serializer_file_digest) {
       Digest::MD5.file(serializer_file_path).to_s
     }
+    let(:engine_serializer_file_path) {
+      File.expand_path('../fixtures/engine_test_serializer.rb', __dir__)
+    }
+    let(:engine_serializer_file_digest) {
+      Digest::MD5.file(engine_serializer_file_path).to_s
+    }
 
     before do
       allow(NutritionSerializer).to receive(:file_hash).and_return(
@@ -210,6 +244,9 @@ describe CacheCrispies::Base do
       )
       allow(Rails).to receive_message_chain(:root, :join).and_return(
         serializer_file_path
+      )
+      allow(MyEngine).to receive_message_chain(:root, :join).and_return(
+        engine_serializer_file_path
       )
     end
 
@@ -229,6 +266,12 @@ describe CacheCrispies::Base do
       expect(serializer.cache_key_base).to eq(
         "#{serializer}-#{serializer_file_digest}+#{nested_serializer_digest}"
       )
+    end
+
+    context 'when an engine is set' do
+      it "includes a digest of the serializer class file's contents" do
+        expect(engine_serializer.cache_key_base).to include engine_serializer_file_digest
+      end
     end
   end
 

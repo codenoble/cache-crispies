@@ -64,6 +64,21 @@ module CacheCrispies
       alias do_caching? do_caching
     end
 
+    # Get or set root path of Rails application or engine.
+    # It uses Rails by default, but can be overriden with your Rails Engine class.
+    # Calling the method with an argument will set the value, calling it without
+    # any arguments will get the value.
+    def self.engine(value = nil)
+      @engine ||= superclass.try(:engine)
+      @engine ||= Rails
+
+      # method called with no args so act as a getter
+      return @engine if value.nil?
+
+      # method called with args so act as a setter
+      @engine = value
+    end
+
     # Get or set a JSON key to use as a root key on a non-collection
     # serializable. By default it's the name of the class without the
     # "Serializer" part. But it can be overridden in a subclass to be anything.
@@ -190,7 +205,7 @@ module CacheCrispies
         parts = %w[app serializers]
         parts += to_s.deconstantize.split('::').map(&:underscore)
         parts << "#{to_s.demodulize.underscore}.rb"
-        Rails.root.join(*parts)
+        engine.root.join(*parts)
       end
     end
     private_class_method :path
