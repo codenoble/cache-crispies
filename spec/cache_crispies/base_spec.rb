@@ -2,8 +2,15 @@ require 'spec_helper'
 require 'ostruct'
 
 describe CacheCrispies::Base do
-  class NutritionSerializer < CacheCrispies::Base
+  class CaloriesSerializer < CacheCrispies::Base
     serialize :calories
+  end
+
+  class NutritionSerializer < CaloriesSerializer
+    serialize :fat,
+              :carbohydrates,
+              :sodium,
+              :protein
   end
 
   class CacheCrispiesTestSerializer < CacheCrispies::Base
@@ -45,7 +52,7 @@ describe CacheCrispies::Base do
       brand: 'Cookie Crisp',
       company: 'General Mills',
       deeply_nested: true,
-      nutrition_info: OpenStruct.new(calories: 1_000),
+      nutrition_info: OpenStruct.new(calories: 1_000, fat: 20, carbohydrates: 60, sodium: 30, protein: 10),
       organic: 'true',
       legal: OpenStruct.new(parent_company: 'Disney probably')
     )
@@ -67,7 +74,11 @@ describe CacheCrispies::Base do
           }
         },
         nutrition_info: {
-          calories: 1000
+          calories: 1000,
+          fat: 20,
+          carbohydrates: 60,
+          sodium: 30,
+          protein: 10
         },
         organic: true,
         parent_company: 'Disney probably'
