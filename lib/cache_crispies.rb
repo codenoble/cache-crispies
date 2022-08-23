@@ -12,6 +12,9 @@ module CacheCrispies
   # The string to use to join parts of the cache keys together
   CACHE_KEY_SEPARATOR = '+'
 
+  # Magic value for undefined arguments
+  UNDEFINED = Object.new.freeze
+
   require 'cache_crispies/version'
 
   # Use autoload for better Rails development

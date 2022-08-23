@@ -73,6 +73,36 @@ describe CacheCrispies::Controller do
       subject.cache_render CerealSerializerForController, collection.first
     end
 
+    context 'with a key: option'do
+      context 'overriding the key in the serializer' do
+        it 'renders a json collection' do
+          expect(subject).to receive(:render).with json: { serials: cereal_names.map { |name| { name: name } } }.to_json
+
+          subject.cache_render CerealSerializerForController, collection, key: "serials"
+        end
+
+        it 'renders a single json object' do
+          expect(subject).to receive(:render).with json: { serial: { name: cereal_names.first} }.to_json
+
+          subject.cache_render CerealSerializerForController, collection.first, key: "serial"
+        end
+      end
+
+      context 'set to nil' do
+        it 'renders a json collection' do
+          expect(subject).to receive(:render).with json: cereal_names.map { |name| { name: name } }.to_json
+
+          subject.cache_render CerealSerializerForController, collection, key: nil
+        end
+
+        it 'renders a single json object' do
+          expect(subject).to receive(:render).with json: { name: cereal_names.first }.to_json
+
+          subject.cache_render CerealSerializerForController, collection.first, key: nil
+        end
+      end
+    end
+
     context 'with a status: option' do
       it 'passes the status option to the Rails render call' do
         expect(subject).to receive(:render).with(
