@@ -229,6 +229,8 @@ module CacheCrispies
         current_nesting = Array(@nesting).dup
         current_conditions = Array(@conditions).dup
 
+        raise ArgumentError, "Serializable attribute of '#{attrib}' already defined in class #{name}" if @attributes.any? { |a| a.key == attrib }
+
         @attributes <<
           Attribute.new(
             attrib,

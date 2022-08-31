@@ -245,6 +245,10 @@ describe CacheCrispies::Base do
       )
     end
 
+    it 'raises an error when redefining an attribute' do
+      expect { instance.class.send(:serialize, :id) }.to raise_error ArgumentError
+    end
+
     it 'contains the correct attribute values' do
       expect(subject[0].method_name).to eq :id
       expect(subject[0].key).to eq :id
