@@ -39,6 +39,20 @@ describe CacheCrispies::Base do
     end
   end
 
+  class BaseSerializer < CacheCrispies::Base
+    transform_keys lambda { |key| key.to_s.camelize(:lower) }
+  end
+
+  class InheritingSerializer < BaseSerializer
+    serialize :id, :snake_case
+  end
+
+  class OverriddenSerializer < BaseSerializer
+    transform_keys lambda { |key| key.to_s.upcase }
+
+    serialize :id, :snake_case
+  end
+
   let(:model) do
     OpenStruct.new(
       id: 42,
@@ -47,7 +61,8 @@ describe CacheCrispies::Base do
       deeply_nested: true,
       nutrition_info: OpenStruct.new(calories: 1_000),
       organic: 'true',
-      legal: OpenStruct.new(parent_company: 'Disney probably')
+      legal: OpenStruct.new(parent_company: 'Disney probably'),
+      snake_case: 'i was snakecased'
     )
   end
 
@@ -91,6 +106,22 @@ describe CacheCrispies::Base do
           organic: true,
           parent_company: 'Disney probably'
         )
+      end
+    end
+  end
+
+  describe '.transform_keys' do
+    let(:serializer) { InheritingSerializer }
+
+    it 'transforms attribute keys' do
+      expect(subject.as_json.keys).to eq(%w[id snakeCase])
+    end
+
+    describe 'overridden serializers' do
+      let(:serializer) { OverriddenSerializer }
+
+      it 'transforms attribute keys' do
+        expect(subject.as_json.keys).to eq(%w[ID SNAKE_CASE])
       end
     end
   end
