@@ -30,7 +30,7 @@ module CacheCrispies
     def cache_render(
       serializer,
       cacheable,
-      key: nil, collection: nil, status: nil,
+      key: UNDEFINED, collection: nil, status: nil,
       meta: {}, meta_key: :meta,
       **options
     )

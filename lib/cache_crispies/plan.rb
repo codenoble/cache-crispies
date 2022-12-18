@@ -16,7 +16,7 @@ module CacheCrispies
     #   data under
     # @option options [Boolean] :collection whether to render the data as a
     #   collection/array or a single object
-    def initialize(serializer, cacheable, key: nil, collection: nil, **options)
+    def initialize(serializer, cacheable, key: UNDEFINED, collection: nil, **options)
       @serializer = serializer
       @cacheable = cacheable
 
@@ -91,7 +91,7 @@ module CacheCrispies
     private
 
     def key
-      return @key unless @key.nil?
+      return @key unless @key == UNDEFINED
 
       (collection? ? serializer.collection_key : serializer.key)
     end

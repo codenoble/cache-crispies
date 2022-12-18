@@ -206,6 +206,7 @@ cacheable.cache_key # typically ActiveRecord::Base#cache_key
 - Changing the `dependency_key` will bust all caches from that serializer
 - Not setting the appropriate value in `cache_key_addons` when the same model + serializer pair could produce different output, depending on options or other factors, will result in stale data
 - Data will be cached in the `Rails.cache` store by default
+- If the serializer is implemented in a Rails Engine instead of the base Rails application, set the engine class in the serializer: `engine MyEngine` (inherited in subclasses)
 
 How To...
 ---------
