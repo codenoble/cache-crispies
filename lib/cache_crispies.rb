@@ -25,6 +25,7 @@ module CacheCrispies
   autoload :Optional,       'cache_crispies/optional'
   autoload :Configuration,  'cache_crispies/configuration'
   autoload :HashBuilder,    'cache_crispies/hash_builder'
+  autoload :JsonBuilder,    'cache_crispies/json_builder'
   autoload :Memoizer,       'cache_crispies/memoizer'
   autoload :Controller,     'cache_crispies/controller'
   autoload :Plan,           'cache_crispies/plan'

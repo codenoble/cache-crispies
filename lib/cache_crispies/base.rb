@@ -23,7 +23,7 @@ module CacheCrispies
     class << self
       attr_reader :attributes
     end
-    delegate :attributes, to: :class
+    delegate :attributes, :attributes_by_nesting, to: :class
 
     # Initializes a new instance of CacheCrispies::Base, or really, it should
     # always be a subclass of CacheCrispies::Base.
@@ -41,6 +41,18 @@ module CacheCrispies
     # @return [Hash] a JSON-ready hash
     def as_json
       HashBuilder.new(self).call
+    end
+
+    # Renders the serializer instance to an Oj::StringWriter instance
+    #
+    # @return [Oj::StringWriter] an Oj::StringWriter instance with the
+    #   serialized content
+    def write_to_json(json_writer = nil)
+      json_writer ||= Oj::StringWriter.new(mode: :rails)
+
+      JsonBuilder.new(self).call(json_writer)
+
+      json_writer
     end
 
     # Get or set whether or not this serializer class should allow caching of
@@ -191,6 +203,12 @@ module CacheCrispies
       @file_hashes ||= (
         [file_hash] + nested_serializers.flat_map(&:file_hashes)
       ).uniq.sort
+    end
+
+    def self.attributes_by_nesting
+      @attributes_by_nesting ||= (
+        attributes.sort_by(&:nesting).group_by(&:nesting)
+      )
     end
 
     private

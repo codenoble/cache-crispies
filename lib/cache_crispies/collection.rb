@@ -29,6 +29,22 @@ module CacheCrispies
       end
     end
 
+    # Renders the collection to an Oj::StringWriter instance without caching
+    #
+    # @return [Oj::StringWriter] an Oj::StringWriter instance with the
+    #   serialized content
+    def write_to_json(json_writer = nil)
+      json_writer ||= Oj::StringWriter.new(mode: :rails)
+      json_writer.push_array
+
+      collection.each do |model|
+        serializer.new(model, options).write_to_json(json_writer)
+      end
+
+      json_writer.pop
+      json_writer
+    end
+
     private
 
     attr_reader :collection, :serializer, :options

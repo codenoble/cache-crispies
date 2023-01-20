@@ -16,7 +16,7 @@ module CacheCrispies
     #
     # @return [Hash]
     def call
-      return unless @serializer.model
+      return if @serializer.model.nil?
 
       hash = {}
 
@@ -42,7 +42,7 @@ module CacheCrispies
       hash
     end
 
-    private
+    protected
 
     attr_reader :serializer, :condition_results
 
@@ -56,18 +56,19 @@ module CacheCrispies
       end
     end
 
-    def value_for(attribute)
+    def target_for(attribute)
       meth = attribute.method_name
 
-      target =
-        if meth != :itself && serializer.respond_to?(meth)
-          serializer
-        else
-          serializer.model
-        end
+      if serializer.respond_to?(meth) && meth != :itself
+        serializer
+      else
+        serializer.model
+      end
+    end
 
+    def value_for(attribute)
       # TODO: rescue NoMethodErrors here with something more telling
-      attribute.value_for(target, serializer.options)
+      attribute.value_for(target_for(attribute), serializer.options)
     end
   end
 end

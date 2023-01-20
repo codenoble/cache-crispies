@@ -105,6 +105,50 @@ describe CacheCrispies::Base do
     end
   end
 
+  describe '#write_to_json' do
+    let(:recovered_hash) { Oj.compat_load(subject.write_to_json.to_s, symbol_keys: true) }
+
+    it 'serializes to an Oj::StringWriter' do
+      expect(subject.write_to_json).to be_kind_of(Oj::StringWriter)
+
+      expect(recovered_hash).to eq(
+        id: '42',
+        name: 'Cookie Crisp',
+        company: 'General Mills',
+        nested: {
+          nested_again: {
+            deeply_nested: 'TRUE'
+          }
+        },
+        nutrition_info: {
+          calories: 1000
+        },
+        organic: true,
+        parent_company: 'Disney probably'
+      )
+    end
+
+    context 'when nutrition_info is nil' do
+      before { model.nutrition_info = nil }
+
+      it 'serializes to an Oj::StringWriter' do
+        expect(recovered_hash).to eq(
+          id: '42',
+          name: 'Cookie Crisp',
+          company: 'General Mills',
+          nested: {
+            nested_again: {
+              deeply_nested: 'TRUE'
+            }
+          },
+          nutrition_info: nil,
+          organic: true,
+          parent_company: 'Disney probably'
+        )
+      end
+    end
+  end
+
   describe '.key' do
     it 'underscores the demodulized class name by default' do
       expect(serializer.key).to eq :cache_crispies_test

@@ -63,16 +63,27 @@ module CacheCrispies
     # @raise [InvalidCoercionType] when an invalid argument is passed in the
     #   to: argument
     def value_for(target, options)
-      value =
-        if block?
-          block.call(target, options)
-        elsif through?
-          target.public_send(through)&.public_send(method_name)
-        else
-          target.public_send(method_name)
-        end
+      value = retrieve_value(target, options)
 
       serializer ? serialize(value, options) : coerce(value)
+    end
+
+    # Writes a key-value pair of the attribute for the given target object
+    # and options into the given Oj::StringWriter
+    #
+    # @param json_writer [Oj::StringWriter] any Oj::StringWriter instance
+    # @param target [Object] typically ActiveRecord::Base, but could be anything
+    # @param options [Hash] any optional values from the serializer instance
+    # @raise [InvalidCoercionType] when an invalid argument is passed in the
+    #   to: argument
+    def write_to_json(json_writer, target, options)
+      value = retrieve_value(target, options)
+
+      if serializer
+        write_serialized_value(json_writer, value, options)
+      else
+        json_writer.push_value(coerce(value), key.to_s)
+      end
     end
 
     private
@@ -83,6 +94,16 @@ module CacheCrispies
 
     def block?
       !block.nil?
+    end
+
+    def retrieve_value(target, options)
+      if block?
+        block.call(target, options)
+      elsif through?
+        target.public_send(through)&.public_send(method_name)
+      else
+        target.public_send(method_name)
+      end
     end
 
     # Here we'll render the attribute with a given serializer and attempt to
@@ -96,6 +117,20 @@ module CacheCrispies
         plan.cache { Collection.new(value, serializer, options).as_json }
       else
         plan.cache { serializer.new(value, options).as_json }
+      end
+    end
+
+    def write_serialized_value(json_writer, value, options)
+      plan = CacheCrispies::Plan.new(
+        serializer, value, collection: collection, **options
+      )
+
+      json_writer.push_key(key.to_s) if key
+
+      if key && plan.collection?
+        Collection.new(value, serializer, options).write_to_json(json_writer)
+      else
+        JsonBuilder.new(serializer.new(value, options)).call(json_writer, flat: !key)
       end
     end
 
