@@ -57,11 +57,13 @@ module CacheCrispies
     private
 
     def common_prefix_length(array1, array2)
-      (0...[array1.length, array2.length].min).each do |i|
+      shorter_length = [array1.length, array2.length].min
+
+      (0...shorter_length).each do |i|
         return i if array1[i] != array2[i]
       end
 
-      array1.length
+      shorter_length
     end
   end
 end
