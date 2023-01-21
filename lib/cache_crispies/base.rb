@@ -23,7 +23,7 @@ module CacheCrispies
     class << self
       attr_reader :attributes
     end
-    delegate :attributes, :attributes_by_nesting, to: :class
+    delegate :attributes, to: :class
 
     # Initializes a new instance of CacheCrispies::Base, or really, it should
     # always be a subclass of CacheCrispies::Base.
@@ -210,6 +210,7 @@ module CacheCrispies
         attributes.sort_by(&:nesting).group_by(&:nesting)
       )
     end
+    delegate :attributes_by_nesting, to: :class
 
     private
 
