@@ -38,7 +38,7 @@ describe CacheCrispies::Controller do
 
     context 'with etags disabled' do
       it 'does not set etags' do
-        expect(subject).to receive(:render).with json: collection_json
+        expect(subject).to receive(:render).with({ json: collection_json })
         response_double = double
         allow(subject).to receive(:response).and_return response_double
         expect(response_double).to_not receive(:weak_etag=)
@@ -51,7 +51,7 @@ describe CacheCrispies::Controller do
       let(:etags) { true }
 
       it 'sets etags' do
-        expect(subject).to receive(:render).with json: collection_json
+        expect(subject).to receive(:render).with({ json: collection_json })
         expect_any_instance_of(
           CacheCrispies::Plan
         ).to receive(:etag).and_return 'test-etag'
@@ -62,13 +62,13 @@ describe CacheCrispies::Controller do
     end
 
     it 'renders a json collection' do
-      expect(subject).to receive(:render).with json: collection_json
+      expect(subject).to receive(:render).with({ json: collection_json })
 
       subject.cache_render CerealSerializerForController, collection
     end
 
     it 'renders a single json object' do
-      expect(subject).to receive(:render).with json: single_json
+      expect(subject).to receive(:render).with({ json: single_json })
 
       subject.cache_render CerealSerializerForController, collection.first
     end
@@ -76,13 +76,13 @@ describe CacheCrispies::Controller do
     context 'with a key: option'do
       context 'overriding the key in the serializer' do
         it 'renders a json collection' do
-          expect(subject).to receive(:render).with json: { serials: cereal_names.map { |name| { name: name } } }.to_json
+          expect(subject).to receive(:render).with({ json: { serials: cereal_names.map { |name| { name: name } } }.to_json })
 
           subject.cache_render CerealSerializerForController, collection, key: "serials"
         end
 
         it 'renders a single json object' do
-          expect(subject).to receive(:render).with json: { serial: { name: cereal_names.first} }.to_json
+          expect(subject).to receive(:render).with({ json: { serial: { name: cereal_names.first} }.to_json })
 
           subject.cache_render CerealSerializerForController, collection.first, key: "serial"
         end
@@ -90,13 +90,13 @@ describe CacheCrispies::Controller do
 
       context 'set to nil' do
         it 'renders a json collection' do
-          expect(subject).to receive(:render).with json: cereal_names.map { |name| { name: name } }.to_json
+          expect(subject).to receive(:render).with({ json: cereal_names.map { |name| { name: name } }.to_json })
 
           subject.cache_render CerealSerializerForController, collection, key: nil
         end
 
         it 'renders a single json object' do
-          expect(subject).to receive(:render).with json: { name: cereal_names.first }.to_json
+          expect(subject).to receive(:render).with({ json: { name: cereal_names.first }.to_json })
 
           subject.cache_render CerealSerializerForController, collection.first, key: nil
         end
@@ -105,10 +105,10 @@ describe CacheCrispies::Controller do
 
     context 'with a status: option' do
       it 'passes the status option to the Rails render call' do
-        expect(subject).to receive(:render).with(
+        expect(subject).to receive(:render).with({
           json: single_json,
           status: 418
-        )
+        })
 
         subject.cache_render(
           CerealSerializerForController,
@@ -120,9 +120,9 @@ describe CacheCrispies::Controller do
 
     context 'with a meta: option' do
       it 'adds a meta data hash to the JSON' do
-        expect(subject).to receive(:render).with(
+        expect(subject).to receive(:render).with({
           json: single_hash.merge(meta: { page: 42 }).to_json
-        )
+        })
 
         subject.cache_render(
           CerealSerializerForController,
@@ -134,9 +134,9 @@ describe CacheCrispies::Controller do
 
     context 'with a meta_key: option' do
       it 'adds a meta data hash to the JSON with the provided key' do
-        expect(subject).to receive(:render).with(
+        expect(subject).to receive(:render).with({
           json: single_hash.merge(test_meta_data: { page: 42 }).to_json
-        )
+        })
 
         subject.cache_render(
           CerealSerializerForController,
