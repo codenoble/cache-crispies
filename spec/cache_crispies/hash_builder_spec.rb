@@ -24,10 +24,19 @@ describe CacheCrispies::HashBuilder do
     end
   end
 
+  class AddressSerializer < CacheCrispies::Base
+    serialize :full_address do |model, _options|
+      "#{model.street}, #{model.city}, #{model.state} #{model.zip}"
+    end
+  end
+
   class CerealSerializerForHashBuilder < CacheCrispies::Base
     serialize :uid, from: :id, to: String
     serialize :name, :company
     merge :itself, with: MarketingBsSerializer
+    merge :itself, with: AddressSerializer do |model, _options|
+      model.address
+    end
 
     nest_in :about do
       nest_in :nutritional_information do
@@ -66,6 +75,14 @@ describe CacheCrispies::HashBuilder do
       OpenStruct.new(name: 'Lactose')
     ]
   }
+  let(:address) {
+    OpenStruct.new(
+      street: '123 Fake St',
+      city: 'San Francisco',
+      state: 'CA',
+      zip: '94103'
+    )
+  }
   let(:model) {
     OpenStruct.new(
       id: 42,
@@ -75,7 +92,8 @@ describe CacheCrispies::HashBuilder do
       organic: organic,
       tagline: "Part of a balanced breakfast",
       ingredients: ingredients,
-      allergies: allergies
+      allergies: allergies,
+      address: address
     )
   }
   let(:options) { { footnote_marker: '*' } }
@@ -88,6 +106,7 @@ describe CacheCrispies::HashBuilder do
         uid: '42',
         name: 'Lucky Charms',
         company: 'General Mills',
+        full_address: '123 Fake St, San Francisco, CA 94103',
         tagline: 'Part of a balanced breakfast*',
         small_print: "*this doesn't mean jack-squat",
         about: {
@@ -110,6 +129,7 @@ describe CacheCrispies::HashBuilder do
           uid: '42',
           name: 'Lucky Charms',
           company: 'General Mills',
+          full_address: '123 Fake St, San Francisco, CA 94103',
           tagline: 'Part of a balanced breakfast†',
           small_print: "†this doesn't mean jack-squat",
           about: {
@@ -135,6 +155,7 @@ describe CacheCrispies::HashBuilder do
             uid: '42',
             name: 'Lucky Charms',
             company: 'General Mills',
+            full_address: '123 Fake St, San Francisco, CA 94103',
             tagline: 'Part of a balanced breakfast†',
             small_print: "†this doesn't mean jack-squat",
             about: {
@@ -163,6 +184,7 @@ describe CacheCrispies::HashBuilder do
           uid: '42',
           name: 'Lucky Charms',
           company: 'General Mills',
+          full_address: '123 Fake St, San Francisco, CA 94103',
           tagline: 'Part of a balanced breakfast*',
           small_print: "*this doesn't mean jack-squat",
           about: {
@@ -190,6 +212,7 @@ describe CacheCrispies::HashBuilder do
           uid: '42',
           name: 'Lucky Charms',
           company: 'General Mills',
+          full_address: '123 Fake St, San Francisco, CA 94103',
           tagline: 'Part of a balanced breakfast*',
           small_print: "*this doesn't mean jack-squat",
           about: {

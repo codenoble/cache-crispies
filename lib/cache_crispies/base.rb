@@ -261,8 +261,8 @@ module CacheCrispies
     end
     private_class_method :serialize
 
-    def self.merge(attribute = nil, with: nil)
-      serialize(nil, from: attribute, with: with)
+    def self.merge(attribute = nil, with: nil, &block)
+      serialize(nil, from: attribute, with: with, &block)
     end
     private_class_method :merge
   end
