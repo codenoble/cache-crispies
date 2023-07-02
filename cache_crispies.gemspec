@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Fast Rails serializer with built-in caching'
   spec.homepage      = 'https://github.com/codenoble/cache-crispies'
   spec.licenses      = ['MIT']
-  spec.metadata          = { 'source_code_uri' => 'https://github.com/example/example' }
+  spec.metadata      = { 'source_code_uri' => 'https://github.com/example/example' }
 
   spec.files         = Dir.glob('{lib,spec}/**/*') + ['.rspec']
   spec.test_files    = spec.files.grep(%r{^(spec)/})
