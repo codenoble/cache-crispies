@@ -1,4 +1,4 @@
-Cache Crispies [![CircleCI](https://circleci.com/gh/codenoble/cache-crispies.svg?style=shield)](https://circleci.com/gh/codenoble/cache-crispies) [![Maintainability](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/maintainability)](https://codeclimate.com/github/codenoble/cache-crispies/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/278cfda71defc0bc1d1c/test_coverage)](https://codeclimate.com/github/codenoble/cache-crispies/test_coverage)
+[![Ruby](https://github.com/codenoble/cache-crispies/actions/workflows/rspec.yml/badge.svg)](https://github.com/codenoble/cache-crispies/actions/workflows/rspec.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/656eaf5139ce4a16a465676d8acc7eac)](https://app.codacy.com/gh/codenoble/cache-crispies/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 ==============
 
 Speedy Rails JSON serialization with built-in caching.
@@ -453,7 +453,7 @@ Feel free to contribute by opening a Pull Request. But before you do, please be 
 - Run `bundle exec appraisal install` to update all of the appropriate gemfiles.
 - Run `bundle exec appraisal rspec` to ensure all tests are passing.
 - Check the `rspec` output around test coverage. Try to maintain `LOC (100.0%) covered`, if at all possible.
-- After pushing up your pull request, check the status from [CircleCI](https://circleci.com) and [Code Climate](https://codeclimate.com) to ensure they pass.
+- After pushing up your pull request, check the status from [CircleCI](https://circleci.com) and [Codacy](https://app.codacy.com/gh/codenoble/cache-crispies/dashboard) to ensure they pass.
 
 License
 -------
