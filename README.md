@@ -112,6 +112,28 @@ end
 
 Put serializer files in `app/serializers/`. For instance this file should be at `app/serializers/cereal_serializer.rb`.
 
+### Snakecase to lower camel case
+You can pass a method to `transform_keys` in a serializer which will transform the keys for each attribute unless a `from` attribute was specified for that attribute.
+The configuration for `transform_keys` can be inherited, and overridden in the serializers that inherit from another.
+```ruby
+# app/serializers/base_serializer.rb
+class BaseSerializer < CacheCrispies::Base
+  transform_keys lambda { |key| key.to_s.camelize(:lower) } 
+end
+
+# app/serializers/crispy_serializer.rb
+class CrispySerializer < BaseSerializer
+  serialize :id, :created_at
+end
+```
+This will format the keys for each attribute using the passed in lambda like so:
+```json
+{
+  "id": "123",
+  "createdAt": "somedate"
+}
+```
+
 ### In your Rails controller
 ```ruby
 class CerealsController

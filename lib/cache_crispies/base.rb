@@ -193,6 +193,16 @@ module CacheCrispies
       ).uniq.sort
     end
 
+    # Sets a method or Proc to transform keys by
+    #
+    # @param proc [Proc] a Proc to execute on serializable keys
+    # @return [Proc] a Proc to execute on the keys
+    def self.transform_keys(proc = nil)
+      return @transform_keys ||= proc if proc.present? || @transform_keys.present?
+
+      self.superclass.transform_keys if self.superclass.respond_to?(:transform_keys)
+    end
+
     private
 
     def self.file_hash
@@ -241,13 +251,14 @@ module CacheCrispies
     )
       attribute_names.flat_map do |attrib|
         attrib = attrib&.to_sym
+        key = attrib
         current_nesting = Array(@nesting).dup
         current_conditions = Array(@conditions).dup
 
         @attributes <<
           Attribute.new(
-            attrib,
-            from: from,
+            transform_key(attrib),
+            from: from || attrib,
             with: with,
             through: through,
             to: to,
@@ -265,5 +276,15 @@ module CacheCrispies
       serialize(nil, from: attribute, with: with)
     end
     private_class_method :merge
+    
+    # Transforms an attribute key using a specified Proc
+    #
+    # @param key [String] the key for an attribute
+    # @return [String] a transformed key
+    def self.transform_key(key)
+      return key if transform_keys.blank?
+    
+      transform_keys.call(key)
+    end
   end
 end
