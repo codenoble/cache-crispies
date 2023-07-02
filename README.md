@@ -1,4 +1,4 @@
-[![Ruby](https://github.com/codenoble/cache-crispies/actions/workflows/rspec.yml/badge.svg)](https://github.com/codenoble/cache-crispies/actions/workflows/rspec.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/656eaf5139ce4a16a465676d8acc7eac)](https://app.codacy.com/gh/codenoble/cache-crispies/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Ruby](https://github.com/codenoble/cache-crispies/actions/workflows/rspec.yml/badge.svg)](https://github.com/codenoble/cache-crispies/actions/workflows/rspec.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/656eaf5139ce4a16a465676d8acc7eac)](https://app.codacy.com/gh/codenoble/cache-crispies/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/656eaf5139ce4a16a465676d8acc7eac)](https://app.codacy.com/gh/codenoble/cache-crispies/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 ==============
 
 Speedy Rails JSON serialization with built-in caching.
