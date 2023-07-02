@@ -80,4 +80,12 @@ describe CacheCrispies::Collection do
       end
     end
   end
+
+  describe '#write_to_json' do
+    let(:recovered_hash) { Oj.compat_load(subject.write_to_json.to_s, symbol_keys: true) }
+
+    it 'serializes to an Oj::StringWriter' do
+      expect(recovered_hash).to eq [{ name: name1 }, { name: name2 }]
+    end
+  end
 end

@@ -43,6 +43,18 @@ module CacheCrispies
       HashBuilder.new(self).call
     end
 
+    # Renders the serializer instance to an Oj::StringWriter instance
+    #
+    # @return [Oj::StringWriter] an Oj::StringWriter instance with the
+    #   serialized content
+    def write_to_json(json_writer = nil)
+      json_writer ||= Oj::StringWriter.new(mode: :rails)
+
+      JsonBuilder.new(self).call(json_writer)
+
+      json_writer
+    end
+
     # Get or set whether or not this serializer class should allow caching of
     # results. It returns false by default, but can be overridden in child
     # classes. Calling the method with an argument will set the value, calling
@@ -192,6 +204,13 @@ module CacheCrispies
         [file_hash] + nested_serializers.flat_map(&:file_hashes)
       ).uniq.sort
     end
+
+    def self.attributes_by_nesting
+      @attributes_by_nesting ||= (
+        attributes.sort_by(&:nesting).group_by(&:nesting)
+      )
+    end
+    delegate :attributes_by_nesting, to: :class
 
     private
 
