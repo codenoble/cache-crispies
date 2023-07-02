@@ -17,7 +17,6 @@ SimpleCov.start do
   )
 end
 
-require 'byebug'
 require_relative '../lib/cache_crispies'
 
 RSpec.configure do |config|

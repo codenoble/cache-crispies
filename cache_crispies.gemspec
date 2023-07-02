@@ -11,18 +11,20 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Fast Rails serializer with built-in caching'
   spec.homepage      = 'https://github.com/codenoble/cache-crispies'
   spec.licenses      = ['MIT']
+  spec.metadata      = { 'source_code_uri' => 'https://github.com/codenoble/cache-crispies' }
 
   spec.files         = Dir.glob('{lib,spec}/**/*') + ['.rspec']
   spec.test_files    = spec.files.grep(%r{^(spec)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'railties', '>= 5.0.0', '< 9.0'
+  spec.required_ruby_version = '>= 2.7.0'
+
+  spec.add_dependency 'railties', '>= 6.0.0', '< 9.0'
   spec.add_dependency 'oj', '~> 3.7'
 
-  spec.add_development_dependency 'activemodel', '>= 5.0.0', '< 9.0'
-  spec.add_development_dependency 'appraisal', '~> 2.2'
-  spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'byebug', '~> 11.0'
+  spec.add_development_dependency 'activemodel', '>= 6.0.0', '< 9.0'
+  spec.add_development_dependency 'appraisal', '~> 2.4'
+  spec.add_development_dependency 'bundler', '~> 1.8'
   spec.add_development_dependency 'rspec', '~> 3.13.0'
   spec.add_development_dependency 'rspec_junit_formatter', '~> 0.4'
   spec.add_development_dependency 'simplecov', '~> 0.22'
