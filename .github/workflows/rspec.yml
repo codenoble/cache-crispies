@@ -26,4 +26,6 @@ jobs:
       - name: Run tests
         run: bundle exec appraisal rspec --format progress --format RspecJunitFormatter --out ~/tmp/rspec/rspec.xml
       - name: Push to Codacy
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
