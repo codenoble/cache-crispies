@@ -1,2 +1,5 @@
+AllCops:
+  TargetRubyVersion: 2.7
+
 Metrics/ParameterLists:
   Enabled: false
