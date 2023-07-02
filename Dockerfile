@@ -1,4 +1,4 @@
-FROM ruby:3.1
+FROM ruby:3.4
 WORKDIR /srv/cache_crispies/
 COPY . /srv/cache_crispies/
 RUN gem install bundler
