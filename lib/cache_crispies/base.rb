@@ -15,7 +15,7 @@ module CacheCrispies
     # @param other [Class] the inheriting child class
     # @return [void]
     def self.inherited(other)
-      other.instance_variable_set(:@attributes, [])
+      other.instance_variable_set(:@attributes, @attributes.dup || [])
       other.instance_variable_set(:@nesting, [])
       other.instance_variable_set(:@conditions, [])
     end
