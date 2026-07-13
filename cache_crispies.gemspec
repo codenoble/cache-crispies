@@ -29,6 +29,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'mutex_m', '~> 0.3'
   spec.add_development_dependency 'rspec_junit_formatter', '~> 0.6'
   spec.add_development_dependency 'rspec', '~> 3.13.0'
-  spec.add_development_dependency 'simplecov', '~> 0.22'
+  spec.add_development_dependency 'simplecov', '~> 1.0'
   spec.add_development_dependency 'simplecov-lcov', '~> 0.8'
 end
